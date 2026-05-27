@@ -1,0 +1,1051 @@
+/* ============================================================
+   frontend/css/help.css
+   FindMate – Help & Support Page Stylesheet  (NEW v5.0)
+
+   Inherits design tokens from style.css and listings.css.
+   This file is self-contained for the help.html page.
+
+   Sections:
+   1.  Base & Variables
+   2.  Navbar (shared pattern)
+   3.  Hero Section
+   4.  Quick-Help Category Cards
+   5.  Page Layout (two-column: FAQ + sidebar)
+   6.  FAQ Category Tabs (left sidebar)
+   7.  FAQ Accordion
+   8.  Contact Form Panel
+   9.  Form Fields
+   10. Success & Error States
+   11. Help Info Sidebar Cards
+   12. Footer Strip
+   13. Animations
+   14. Responsive
+============================================================ */
+
+
+/* ──────────────────────────────────────────────────────────
+   1. BASE & DESIGN TOKENS
+   (mirrors the tokens in style.css and listings.css)
+────────────────────────────────────────────────────────── */
+:root {
+  --navy:        #0B2545;
+  --navy-mid:    #134074;
+  --navy-light:  #1a5276;
+  --teal:        #13C4A3;
+  --teal-dark:   #0FA38A;
+  --amber:       #F5A623;
+  --white:       #FFFFFF;
+  --off-white:   #F8FAFC;
+
+  --input-bg:     #F1F5F9;
+  --input-border: #CBD5E1;
+  --input-focus:  #13C4A3;
+  --text-dark:    #0F172A;
+  --text-mid:     #475569;
+  --text-light:   #94A3B8;
+
+  --success:  #22C55E;
+  --error:    #EF4444;
+  --warning:  #F59E0B;
+
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  24px;
+  --shadow-sm:  0 2px 12px rgba(11,37,69,0.08);
+  --shadow-md:  0 8px 32px rgba(11,37,69,0.12);
+  --shadow-lg:  0 20px 60px rgba(11,37,69,0.16);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+  --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background:  var(--off-white);
+  color:       var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+img { max-width: 100%; }
+
+
+/* ──────────────────────────────────────────────────────────
+   2. NAVBAR  (identical pattern to listings.html)
+────────────────────────────────────────────────────────── */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 64px;
+  background: var(--navy);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+}
+
+.navbar-logo {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.navbar-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-link {
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.72);
+  transition: all 0.2s;
+}
+.nav-link:hover  { color: var(--white); background: rgba(255,255,255,0.08); }
+.nav-link.active { color: var(--teal); }
+
+.btn-nav-primary {
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--teal);
+  color: var(--navy);
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-left: 4px;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-nav-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.08);
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.user-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--amber));
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.btn-logout {
+  padding: 7px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  transition: all 0.2s;
+}
+.btn-logout:hover { color: var(--error); background: rgba(239,68,68,0.1); }
+
+/* Admin link */
+.nav-admin-link {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--amber, #F5A623);
+  background: rgba(245,166,35,0.10);
+  border: 1px solid rgba(245,166,35,0.22);
+  transition: background 0.2s;
+  white-space: nowrap;
+  text-decoration: none;
+  margin-left: 4px;
+}
+.nav-admin-link:hover { background: rgba(245,166,35,0.20); }
+
+/* Hamburger (mobile) */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: none;
+  background: none;
+  z-index: 10;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: all 0.3s var(--ease);
+}
+
+.nav-mobile-divider {
+  display: none;
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 8px 0;
+}
+
+/* Mobile drawer overlay */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(11,37,69,0.5);
+  z-index: 90;
+  backdrop-filter: blur(2px);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   3. HERO SECTION
+────────────────────────────────────────────────────────── */
+.help-hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 55%, #1a6b5f 100%);
+  padding: 64px 40px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative radial glow */
+.help-hero::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(19,196,163,0.15) 0%, transparent 70%);
+  top: -200px; left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Floating ring decorations */
+.help-hero::after {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  border: 1px solid rgba(19,196,163,0.12);
+  border-radius: 50%;
+  bottom: -200px; right: -100px;
+  pointer-events: none;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+
+/* Icon above the heading */
+.hero-icon {
+  width: 72px; height: 72px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  backdrop-filter: blur(8px);
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+.hero-icon svg { width: 36px; height: 36px; color: var(--teal); }
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+.help-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+
+.help-hero h1 em { font-style: italic; color: var(--teal); }
+
+.help-hero p {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+/* Search bar in hero */
+.hero-search {
+  display: flex;
+  max-width: 480px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 99px;
+  padding: 6px 6px 6px 20px;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s, background 0.2s;
+}
+.hero-search:focus-within {
+  border-color: var(--teal);
+  background: rgba(255,255,255,0.12);
+}
+.hero-search input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--white);
+}
+.hero-search input::placeholder { color: rgba(255,255,255,0.45); }
+.hero-search-btn {
+  padding: 10px 22px;
+  border-radius: 99px;
+  background: var(--teal);
+  color: var(--navy);
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.hero-search-btn:hover { background: var(--teal-dark); transform: scale(1.02); }
+
+
+/* ──────────────────────────────────────────────────────────
+   4. QUICK-HELP CATEGORY CARDS
+   Six cards below the hero, one per support category.
+────────────────────────────────────────────────────────── */
+.quick-help {
+  max-width: 1200px;
+  margin: -28px auto 0;
+  padding: 0 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.quick-help-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.quick-card {
+  background: var(--white);
+  border: 1px solid rgba(203,213,225,0.6);
+  border-radius: var(--radius-md);
+  padding: 22px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), border-color 0.2s;
+  box-shadow: var(--shadow-sm);
+  animation: fadeInUp 0.4s var(--ease) both;
+  text-decoration: none;
+  display: block;
+}
+.quick-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--teal);
+}
+
+/* Icon circle */
+.quick-card-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+  transition: transform 0.2s;
+}
+.quick-card:hover .quick-card-icon { transform: scale(1.1); }
+
+/* Icon background colours per category */
+.quick-card-icon.bg-blue   { background: #EFF6FF; }
+.quick-card-icon.bg-teal   { background: rgba(19,196,163,0.1); }
+.quick-card-icon.bg-amber  { background: #FEF3C7; }
+.quick-card-icon.bg-purple { background: #F5F3FF; }
+.quick-card-icon.bg-red    { background: #FFF1F2; }
+.quick-card-icon.bg-green  { background: #F0FDF4; }
+
+.quick-card-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+.quick-card-desc {
+  font-size: 0.72rem;
+  color: var(--text-light);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   5. MAIN CONTENT LAYOUT
+   Two-column: FAQ on left, Contact Form on right.
+────────────────────────────────────────────────────────── */
+.help-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Section headings */
+.section-heading {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-heading-sub {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  margin-bottom: 24px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   6. FAQ CATEGORY TABS
+────────────────────────────────────────────────────────── */
+.faq-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.faq-tab {
+  padding: 7px 16px;
+  border-radius: 99px;
+  border: 1.5px solid var(--input-border);
+  background: var(--white);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.faq-tab:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+  background: rgba(19,196,163,0.06);
+}
+.faq-tab.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   7. FAQ ACCORDION
+────────────────────────────────────────────────────────── */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Single FAQ item — the whole block */
+.faq-item {
+  background: var(--white);
+  border: 1px solid rgba(203,213,225,0.7);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  animation: fadeInUp 0.35s var(--ease) both;
+}
+.faq-item:hover          { border-color: rgba(19,196,163,0.3); }
+.faq-item.open           { border-color: var(--teal); box-shadow: 0 4px 20px rgba(19,196,163,0.12); }
+
+/* The clickable header row */
+.faq-question {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+.faq-question:hover { background: rgba(19,196,163,0.03); }
+
+/* Category dot — coloured circle matching the tab */
+.faq-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Question text */
+.faq-q-text {
+  flex: 1;
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.4;
+}
+
+/* Chevron arrow — rotates when open */
+.faq-chevron {
+  width: 20px; height: 20px;
+  flex-shrink: 0;
+  color: var(--text-light);
+  transition: transform 0.28s var(--ease), color 0.2s;
+}
+.faq-item.open .faq-chevron {
+  transform: rotate(180deg);
+  color: var(--teal);
+}
+
+/* The collapsible answer area */
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s var(--ease), padding 0.25s var(--ease);
+  padding: 0 20px 0 42px; /* indent past the dot */
+}
+.faq-item.open .faq-answer {
+  max-height: 400px; /* large enough for any answer */
+  padding-bottom: 18px;
+}
+
+.faq-answer p {
+  font-size: 0.875rem;
+  color: var(--text-mid);
+  line-height: 1.75;
+}
+
+/* Links inside answers */
+.faq-answer a {
+  color: var(--teal-dark);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(15,163,138,0.35);
+}
+.faq-answer a:hover { color: var(--teal); }
+
+/* "Was this helpful?" row at the bottom of each answer */
+.faq-helpful {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--input-border);
+}
+.faq-helpful span {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+.faq-helpful-btn {
+  padding: 4px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--input-border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.faq-helpful-btn:hover         { border-color: var(--teal); color: var(--teal); background: rgba(19,196,163,0.06); }
+.faq-helpful-btn.voted         { background: var(--teal); border-color: var(--teal); color: var(--white); }
+
+/* "No results" shown when search finds nothing */
+.faq-no-results {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-light);
+}
+.faq-no-results .faq-empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.faq-no-results p { font-size: 0.9rem; line-height: 1.6; }
+
+
+/* ──────────────────────────────────────────────────────────
+   8. CONTACT FORM PANEL (right column — sticky on desktop)
+────────────────────────────────────────────────────────── */
+.contact-panel {
+  position: sticky;
+  top: 84px; /* below navbar */
+}
+
+.contact-card {
+  background: var(--white);
+  border: 1px solid rgba(203,213,225,0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+/* Coloured top accent strip */
+.contact-card-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  padding: 28px 28px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-card-header::before {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  background: var(--teal);
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.12;
+  top: -60px; right: -60px;
+}
+
+.contact-header-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.contact-header-icon svg { width: 24px; height: 24px; color: var(--teal); }
+
+.contact-card-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.contact-card-subtitle {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.5;
+}
+
+/* Form body */
+.contact-form-body { padding: 28px; }
+
+
+/* ──────────────────────────────────────────────────────────
+   9. FORM FIELDS
+────────────────────────────────────────────────────────── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.form-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-light);
+}
+.form-label .req { color: var(--error); margin-left: 2px; }
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--input-focus);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(19,196,163,0.12);
+}
+.form-input.invalid,
+.form-select.invalid,
+.form-textarea.invalid {
+  border-color: var(--error);
+  background: #FFF5F5;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.08);
+}
+
+/* Dropdown arrow styling */
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  max-height: 280px;
+  line-height: 1.65;
+}
+
+/* Character counter below textarea */
+.char-counter {
+  font-size: 0.72rem;
+  color: var(--text-light);
+  text-align: right;
+  transition: color 0.2s;
+}
+.char-counter.warn { color: var(--warning); }
+.char-counter.over { color: var(--error); font-weight: 700; }
+
+/* Field-level error message */
+.field-error {
+  font-size: 0.75rem;
+  color: var(--error);
+  display: none;
+  align-items: center;
+  gap: 5px;
+}
+.field-error.show { display: flex; }
+
+/* Submit button */
+.btn-submit-support {
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--navy-mid), var(--teal));
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 18px rgba(19,196,163,0.3);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  margin-top: 4px;
+}
+.btn-submit-support:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(19,196,163,0.4);
+}
+.btn-submit-support:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* Spinner inside submit button */
+.submit-spinner {
+  width: 18px; height: 18px;
+  animation: spin 0.8s linear infinite;
+  display: none;
+}
+.btn-submit-support.loading .submit-btn-text { display: none; }
+.btn-submit-support.loading .submit-spinner  { display: block; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   10. SUCCESS & ERROR STATES
+────────────────────────────────────────────────────────── */
+
+/* Full-panel success state — replaces the form after submit */
+.success-state {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 28px;
+  animation: fadeInUp 0.4s var(--ease) both;
+}
+.success-state.show { display: flex; }
+
+/* Big animated checkmark circle */
+.success-circle {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), #22C55E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(19,196,163,0.35);
+  animation: successPop 0.5s var(--ease) both;
+}
+.success-circle svg { width: 36px; height: 36px; color: var(--white); }
+
+@keyframes successPop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.1); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+.success-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.success-msg {
+  font-size: 0.875rem;
+  color: var(--text-mid);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+/* Ticket ID reference card */
+.ticket-ref {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  margin-bottom: 24px;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
+.btn-submit-another {
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--input-border);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: none;
+}
+.btn-submit-another:hover { border-color: var(--navy); color: var(--navy); }
+
+/* Inline error banner (server errors) */
+.form-alert {
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+  animation: fadeInUp 0.3s both;
+}
+.form-alert.show    { display: flex; }
+.form-alert.success { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; }
+.form-alert.error   { background: #FFF1F2; border: 1px solid #FECDD3; color: #9F1239; }
+.form-alert-icon    { font-size: 1rem; flex-shrink: 0; }
+
+
+/* ──────────────────────────────────────────────────────────
+   11. HELP INFO SIDEBAR CARDS (below the form)
+────────────────────────────────────────────────────────── */
+.info-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.info-card {
+  background: var(--white);
+  border: 1px solid rgba(203,213,225,0.6);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.info-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.info-card-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.info-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.info-card-text {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+.info-card-link {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--teal-dark);
+  margin-top: 4px;
+  display: inline-block;
+}
+.info-card-link:hover { color: var(--teal); }
+
+
+/* ──────────────────────────────────────────────────────────
+   12. FOOTER STRIP
+────────────────────────────────────────────────────────── */
+.help-footer {
+  background: var(--navy);
+  padding: 32px 40px;
+  text-align: center;
+}
+
+.help-footer p {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.45);
+}
+
+.help-footer a {
+  color: var(--teal);
+  font-weight: 600;
+}
+.help-footer a:hover { text-decoration: underline; }
+
+
+/* ──────────────────────────────────────────────────────────
+   13. ANIMATIONS
+────────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger quick-cards */
+.quick-card:nth-child(1) { animation-delay: 0ms; }
+.quick-card:nth-child(2) { animation-delay: 60ms; }
+.quick-card:nth-child(3) { animation-delay: 120ms; }
+.quick-card:nth-child(4) { animation-delay: 180ms; }
+.quick-card:nth-child(5) { animation-delay: 240ms; }
+.quick-card:nth-child(6) { animation-delay: 300ms; }
+
+/* Stagger FAQ items */
+.faq-item:nth-child(1)  { animation-delay: 0ms;   }
+.faq-item:nth-child(2)  { animation-delay: 50ms;  }
+.faq-item:nth-child(3)  { animation-delay: 100ms; }
+.faq-item:nth-child(4)  { animation-delay: 150ms; }
+.faq-item:nth-child(5)  { animation-delay: 200ms; }
+
+
+/* ──────────────────────────────────────────────────────────
+   14. RESPONSIVE
+────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .help-main { grid-template-columns: 1fr; }
+  .contact-panel { position: static; }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 0 20px; }
+  .nav-hamburger { display: flex; }
+  .nav-mobile-divider { display: block; }
+  .navbar-links {
+    display: none;
+    position: fixed;
+    top: 0; right: 0;
+    width: min(320px, 85vw);
+    height: 100vh;
+    background: var(--navy);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 80px 24px 32px;
+    gap: 4px;
+    z-index: 95;
+    box-shadow: -8px 0 40px rgba(0,0,0,0.3);
+    overflow-y: auto;
+  }
+  .navbar.menu-open .navbar-links { display: flex; }
+  .navbar.menu-open + .nav-overlay { display: block; }
+  .nav-link { width: 100%; padding: 12px 16px; border-radius: var(--radius-sm); }
+
+  .help-hero { padding: 48px 20px 56px; }
+  .quick-help { padding: 0 20px; }
+  .quick-help-grid { grid-template-columns: repeat(3, 1fr); }
+  .help-main { padding: 36px 20px 60px; gap: 24px; }
+
+  .faq-tabs { gap: 6px; }
+  .faq-tab  { font-size: 0.76rem; padding: 5px 12px; }
+  .faq-question { padding: 15px 16px; }
+  .faq-answer   { padding-left: 16px; }
+  .contact-form-body { padding: 22px 18px; }
+}
+
+@media (max-width: 480px) {
+  .hero-search     { border-radius: var(--radius-md); padding: 6px; flex-direction: column; }
+  .hero-search-btn { border-radius: var(--radius-sm); width: 100%; text-align: center; }
+  .quick-help-grid { grid-template-columns: repeat(2, 1fr); }
+  .info-cards      { gap: 10px; }
+}

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile – FindMate</title>
+
+  <!-- Google Fonts — matches the rest of the project -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Shared project styles (CSS variables, reset, brand colours) -->
+  <link rel="stylesheet" href="./css/style.css" />
+  <!-- Global layout & component system -->
+  <link rel="stylesheet" href="./css/global.css" />
+  <!-- Profile-specific styles -->
+  <link rel="stylesheet" href="./css/profile.css" />
+  <!-- Report & Safety System (v7.0) -->
+  <link rel="stylesheet" href="./css/report.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════
+        NAVBAR — unified master design
+        Active page: Profile
+  ══════════════════════════════════════════════════════ -->
+  <nav class="navbar" id="mainNavbar">
+    <a href="./home.html" class="navbar-brand">
+      <div class="navbar-logo">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M20 4L36 18V38H26V28H14V38H4V18L20 4Z" fill="rgba(255,255,255,0.95)" />
+          <rect x="16" y="22" width="8" height="6" rx="1" fill="#0B2545" />
+        </svg>
+      </div>
+      <span class="navbar-title">FindMate</span>
+    </a>
+
+    <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="navbar-links" id="navLinks">
+      <a href="./home.html"  class="nav-link">Home</a>
+      <a href="./listings.html"   class="nav-link">Browse</a>
+      <a href="./matchings.html"  class="nav-link">My Matches ✨</a>
+      <a href="./chat.html"       class="nav-link">Chat 💬</a>
+      <a href="./profile.html"    class="nav-link active">Profile</a>
+      <a href="./help.html"        class="nav-link">Help ❓</a>
+
+      <div class="nav-mobile-divider"></div>
+
+      <a href="./login.html" class="btn-nav-primary" id="navLoginBtn">Sign In</a>
+
+      <div class="user-pill" id="navUserPill" style="display:none;">
+        <div class="user-avatar" id="navUserAvatar">?</div>
+        <span id="navUserName">User</span>
+      </div>
+
+      <a href="./add-listing.html" class="btn-nav-primary" id="navAddBtn" style="display:none;">
+        + Post Room
+      </a>
+
+      <a href="./admin-home.html" class="nav-admin-link" id="navAdminBtn" style="display:none;">⚙️ Admin</a>
+
+      <button class="btn-logout" id="navLogoutBtn" style="display:none;" onclick="logout()">
+        Sign Out
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+        PAGE HERO — consistent with Listings design
+  ══════════════════════════════════════════════════════ -->
+  <section class="fm-hero">
+    <div class="fm-hero__inner">
+      <div class="fm-hero__text">
+        <h1>My <em>Profile</em></h1>
+        <p>Keep your details up to date to get the best roommate matches.</p>
+      </div>
+      <div class="fm-hero__badge">
+        <span class="badge-icon">👤</span>
+        <span>Account Settings</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+        PAGE CONTENT
+  ══════════════════════════════════════════════════════ -->
+  <main class="profile-page">
+
+    <!-- Page heading -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Personal Details</h2>
+        <p class="page-subtitle">Your information is used to find the best roommate matches for you</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <!-- Report this profile button (hidden on own profile; shown on others') -->
+        <div id="profileReportArea" style="display:none;">
+          <button class="btn-report" id="profileReportBtn" onclick="profileReportUser()">
+            🚩 Report User
+          </button>
+        </div>
+        <!-- Edit / Save toggle button -->
+        <button class="btn-edit" id="editToggleBtn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M11 4H4a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          <span id="editToggleLabel">Edit Profile</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Trust score widget (v7.0) — rendered by report.js after profile loads -->
+    <div id="profileTrustWidget" style="display:none;margin-bottom:16px;"></div>
+
+    <!-- ── Global alert banner ── -->
+    <div class="alert alert--success" id="alertSuccess" role="alert">
+      <svg viewBox="0 0 20 20" fill="currentColor" class="alert-icon">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+      </svg>
+      <span id="alertSuccessMsg">Profile saved successfully!</span>
+    </div>
+    <div class="alert alert--error" id="alertError" role="alert">
+      <svg viewBox="0 0 20 20" fill="currentColor" class="alert-icon">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+      </svg>
+      <span id="alertErrorMsg">Something went wrong.</span>
+    </div>
+
+    <!-- ── Full-page loading overlay ── -->
+    <div class="page-loader" id="pageLoader">
+      <div class="loader-spinner"></div>
+      <p>Loading your profile…</p>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+          PROFILE FORM
+    ══════════════════════════════════════════════════ -->
+    <form id="profileForm" novalidate>
+
+      <!-- ─── SECTION 1: Personal Info ─── -->
+      <section class="profile-section">
+        <div class="section-header">
+          <div class="section-icon">👤</div>
+          <div>
+            <h2 class="section-title">Personal Information</h2>
+            <p class="section-desc">Your basic details and how to reach you</p>
+          </div>
+        </div>
+
+        <div class="fields-grid">
+
+          <!-- Full Name -->
+          <div class="field-group" id="group-name">
+            <label class="field-label" for="name">Full Name <span class="required">*</span></label>
+            <input
+              type="text" id="name" name="name"
+              class="field-input" placeholder="e.g. Priya Sharma"
+              maxlength="50" disabled
+            />
+            <p class="field-error" id="error-name"></p>
+          </div>
+
+          <!-- Phone -->
+          <div class="field-group" id="group-phone">
+            <label class="field-label" for="phone">Phone Number</label>
+            <input
+              type="tel" id="phone" name="phone"
+              class="field-input" placeholder="e.g. +91 98765 43210"
+              disabled
+            />
+            <p class="field-error" id="error-phone"></p>
+          </div>
+
+          <!-- Age -->
+          <div class="field-group" id="group-age">
+            <label class="field-label" for="age">Age</label>
+            <input
+              type="number" id="age" name="age"
+              class="field-input" placeholder="e.g. 24"
+              min="16" max="80" disabled
+            />
+            <p class="field-error" id="error-age"></p>
+          </div>
+
+          <!-- Gender -->
+          <div class="field-group" id="group-gender">
+            <label class="field-label" for="gender">Gender</label>
+            <select id="gender" name="gender" class="field-input field-select" disabled>
+              <option value="prefer_not_to_say">Prefer not to say</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <!-- City -->
+          <div class="field-group" id="group-city">
+            <label class="field-label" for="city">City</label>
+            <input
+              type="text" id="city" name="city"
+              class="field-input" placeholder="e.g. Mumbai"
+              disabled
+            />
+          </div>
+
+          <!-- Occupation -->
+          <div class="field-group" id="group-occupation">
+            <label class="field-label" for="occupation">Occupation</label>
+            <input
+              type="text" id="occupation" name="occupation"
+              class="field-input" placeholder="e.g. Software Engineer"
+              maxlength="100" disabled
+            />
+          </div>
+
+        </div><!-- /.fields-grid -->
+
+        <!-- Bio — full width -->
+        <div class="field-group field-group--full" id="group-bio">
+          <label class="field-label" for="bio">
+            About You
+            <span class="char-count"><span id="bioCount">0</span>/300</span>
+          </label>
+          <textarea
+            id="bio" name="bio"
+            class="field-input field-textarea"
+            placeholder="Tell potential roommates a bit about yourself — your lifestyle, hobbies, work hours…"
+            maxlength="300" rows="4" disabled
+          ></textarea>
+          <p class="field-error" id="error-bio"></p>
+        </div>
+
+      </section><!-- /Personal Info -->
+
+
+      <!-- ─── SECTION 2: Roommate Preferences ─── -->
+      <section class="profile-section">
+        <div class="section-header">
+          <div class="section-icon">🏠</div>
+          <div>
+            <h2 class="section-title">Roommate Preferences</h2>
+            <p class="section-desc">Help us find the best matches for you</p>
+          </div>
+        </div>
+
+        <div class="fields-grid">
+
+          <!-- Looking For -->
+          <div class="field-group" id="group-lookingFor">
+            <label class="field-label" for="lookingFor">Looking For</label>
+            <select id="lookingFor" name="lookingFor" class="field-input field-select" disabled>
+              <option value="either">Roommate or Flatmate</option>
+              <option value="roommate">Roommate (shared room)</option>
+              <option value="flatmate">Flatmate (own room)</option>
+            </select>
+          </div>
+
+          <!-- Smoking Preference -->
+          <div class="field-group" id="group-smokingPreference">
+            <label class="field-label" for="smokingPreference">Smoking</label>
+            <select id="smokingPreference" name="smokingPreference" class="field-input field-select" disabled>
+              <option value="no_preference">No Preference</option>
+              <option value="non_smoker">Non-smoker</option>
+              <option value="smoker">Smoker</option>
+              <option value="okay_with_smoking">Okay with smoking</option>
+            </select>
+          </div>
+
+          <!-- Food Preference -->
+          <div class="field-group" id="group-foodPreference">
+            <label class="field-label" for="foodPreference">Food Preference</label>
+            <select id="foodPreference" name="foodPreference" class="field-input field-select" disabled>
+              <option value="no_preference">No Preference</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="non_vegetarian">Non-vegetarian</option>
+              <option value="vegan">Vegan</option>
+            </select>
+          </div>
+
+        </div><!-- /.fields-grid -->
+
+        <!-- Budget range — full width -->
+        <div class="field-group field-group--full">
+          <label class="field-label">Monthly Budget (₹)</label>
+          <div class="budget-row">
+            <div class="budget-input-wrap">
+              <span class="budget-prefix">₹</span>
+              <input
+                type="number" id="budgetMin" name="budgetMin"
+                class="field-input budget-input" placeholder="Min"
+                min="0" disabled
+              />
+            </div>
+            <span class="budget-sep">to</span>
+            <div class="budget-input-wrap">
+              <span class="budget-prefix">₹</span>
+              <input
+                type="number" id="budgetMax" name="budgetMax"
+                class="field-input budget-input" placeholder="Max"
+                min="0" disabled
+              />
+            </div>
+          </div>
+          <p class="field-error" id="error-budget"></p>
+        </div>
+
+      </section><!-- /Preferences -->
+
+
+      <!-- ─── SAVE BUTTON ─── -->
+      <div class="form-actions" id="formActions">
+        <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn-save" id="saveBtn">
+          <span class="btn-save-label">Save Changes</span>
+          <span class="btn-save-loading">
+            <svg class="spinner" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"
+                stroke-dasharray="31.416" stroke-dashoffset="10" stroke-linecap="round"/>
+            </svg>
+            Saving…
+          </span>
+        </button>
+      </div>
+
+    </form><!-- /#profileForm -->
+
+  </main><!-- /.profile-page -->
+
+  <script src="./js/navbar.js"></script>
+  <!-- Report & Safety System (v7.0) -->
+  <script src="./js/report.js"></script>
+  <script src="./js/profile.js"></script>
+</body>
+</html>

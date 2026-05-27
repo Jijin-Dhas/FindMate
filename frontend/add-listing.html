@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post a Room – FindMate</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Shared design tokens + global navbar styles -->
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/global.css" />
+  <!-- Listings/form styles -->
+  <link rel="stylesheet" href="./css/listings.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+        NAVBAR
+  ══════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════
+        NAVBAR — unified master design
+        Active page: Post Room (+ Post Room button is highlighted)
+  ══════════════════════════════════════════ -->
+  <nav class="navbar" id="mainNavbar">
+    <a href="./home.html" class="navbar-brand">
+      <div class="navbar-logo">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M20 4L36 18V38H26V28H14V38H4V18L20 4Z" fill="rgba(255,255,255,0.95)" />
+          <rect x="16" y="22" width="8" height="6" rx="1" fill="#0B2545" />
+        </svg>
+      </div>
+      <span class="navbar-title">FindMate</span>
+    </a>
+
+    <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="navbar-links" id="navLinks">
+      <a href="./home.html"  class="nav-link">Home</a>
+      <a href="./listings.html"   class="nav-link">Browse</a>
+      <a href="./matchings.html"  class="nav-link">My Matches ✨</a>
+      <a href="./chat.html"       class="nav-link">Chat 💬</a>
+      <a href="./profile.html"    class="nav-link">Profile</a>
+      <a href="./help.html"       class="nav-link">Help ❓</a>
+
+      <div class="nav-mobile-divider"></div>
+
+      <a href="./login.html" class="btn-nav-primary" id="navLoginBtn">Sign In</a>
+
+      <div class="user-pill" id="navUserPill" style="display:none;">
+        <div class="user-avatar" id="navUserAvatar">?</div>
+        <span id="navUserName">User</span>
+      </div>
+
+      <!-- This page IS post room, so mark it active via style -->
+      <a href="./add-listing.html" class="btn-nav-primary active" id="navAddBtn" style="display:none;">
+        + Post Room
+      </a>
+
+      <!-- Admin Dashboard link (v6.0) - shown by navbar.js only for admin users -->
+      <a href="./admin-home.html" class="nav-admin-link" id="navAdminBtn" style="display:none;">⚙️ Admin</a>
+
+      <button class="btn-logout" id="navLogoutBtn" style="display:none;" onclick="logout()">
+        Sign Out
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav-overlay" id="navOverlay"></div>
+
+
+  <!-- ══════════════════════════════════════════
+        PAGE HERO — consistent with Listings design
+  ══════════════════════════════════════════ -->
+  <section class="fm-hero">
+    <div class="fm-hero__inner">
+      <div class="fm-hero__text">
+        <h1>Post Your <em>Room</em></h1>
+        <p>List your room and connect with verified potential roommates in your city.</p>
+      </div>
+      <div class="fm-hero__badge">
+        <span class="badge-icon">🏠</span>
+        <span>New Listing</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+        ADD-LISTING PAGE BODY
+  ══════════════════════════════════════════ -->
+  <div class="add-listing-page">
+    <div class="add-listing-inner">
+
+      <!-- Page Heading -->
+      <div class="page-heading" style="margin-bottom: 28px;">
+        <h1 style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--navy); margin-bottom: 4px;">Listing Details</h1>
+        <p style="font-size: 0.9rem; color: var(--text-mid);">Fill in the details below so potential roommates can find and contact you.</p>
+      </div>
+
+      <!-- ── Success / Error Alerts ── -->
+      <div id="alertSuccess" style="display:none; align-items:center; gap:10px; padding:14px 18px;
+           border-radius:8px; font-size:0.875rem; font-weight:500; margin-bottom:20px;
+           background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; animation:slideUp 0.3s both;">
+        ✅ <span id="alertSuccessMsg">Listing created successfully!</span>
+      </div>
+      <div id="alertError" style="display:none; align-items:center; gap:10px; padding:14px 18px;
+           border-radius:8px; font-size:0.875rem; font-weight:500; margin-bottom:20px;
+           background:#FFF1F2; border:1px solid #FECDD3; color:#9F1239; animation:slideUp 0.3s both;">
+        ❌ <span id="alertErrorMsg">Something went wrong.</span>
+      </div>
+
+      <!-- ════════════════════════════════════
+            THE LISTING FORM
+      ════════════════════════════════════ -->
+      <form id="addListingForm" novalidate>
+
+        <!-- ── SECTION 1: Basic Details ── -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/>
+              </svg>
+            </div>
+            Basic Details
+          </div>
+
+          <!-- Title -->
+          <div class="field-row full">
+            <div class="field-group" id="fg-title">
+              <label class="field-label" for="title">
+                Listing Title <span class="req">*</span>
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                class="form-input"
+                placeholder="e.g. Bright Single Room near Metro – Chennai"
+                maxlength="100"
+              />
+              <span class="field-hint">Write a clear, catchy title (5–100 characters)</span>
+              <span class="field-error">Title is required and must be at least 5 characters</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="field-row full">
+            <div class="field-group" id="fg-description">
+              <label class="field-label" for="description">
+                Description <span class="req">*</span>
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                class="form-textarea"
+                placeholder="Describe the room, flat, building, area, rules, and anything a future roommate should know…"
+                maxlength="1000"
+              ></textarea>
+              <span class="field-hint" id="descCount">0 / 1000 characters</span>
+              <span class="field-error">Description is required (min 20 characters)</span>
+            </div>
+          </div>
+
+        </div><!-- /.form-section -->
+
+
+        <!-- ── SECTION 2: Location ── -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                <circle cx="12" cy="9" r="2.5"/>
+              </svg>
+            </div>
+            Location
+          </div>
+
+          <div class="field-row">
+            <!-- City -->
+            <div class="field-group" id="fg-city">
+              <label class="field-label" for="city">City <span class="req">*</span></label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                class="form-input"
+                placeholder="e.g. Chennai"
+              />
+              <span class="field-error">City is required</span>
+            </div>
+
+            <!-- Area -->
+            <div class="field-group" id="fg-area">
+              <label class="field-label" for="area">Area / Locality</label>
+              <input
+                type="text"
+                id="area"
+                name="area"
+                class="form-input"
+                placeholder="e.g. T. Nagar, Velachery"
+              />
+              <span class="field-hint">Neighbourhood or landmark (optional)</span>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ── SECTION 3: Rent & Room Type ── -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+            </div>
+            Rent & Room Type
+          </div>
+
+          <div class="field-row triple">
+            <!-- Rent Amount -->
+            <div class="field-group" id="fg-rent">
+              <label class="field-label" for="rent">
+                Monthly Rent <span class="req">*</span>
+              </label>
+              <div class="input-with-prefix">
+                <span class="input-prefix">₹</span>
+                <input
+                  type="number"
+                  id="rent"
+                  name="rent"
+                  class="form-input"
+                  placeholder="8000"
+                  min="0"
+                />
+              </div>
+              <span class="field-error">Please enter a valid rent amount</span>
+            </div>
+
+            <!-- Room Type -->
+            <div class="field-group" id="fg-roomType">
+              <label class="field-label" for="roomType">Room Type <span class="req">*</span></label>
+              <select id="roomType" name="roomType" class="form-select">
+                <option value="">Select type</option>
+                <option value="single">Single Room</option>
+                <option value="shared">Shared Room</option>
+                <option value="entire_flat">Entire Flat</option>
+                <option value="pg">PG (Paying Guest)</option>
+              </select>
+              <span class="field-error">Please select a room type</span>
+            </div>
+
+            <!-- Available From -->
+            <div class="field-group" id="fg-availableFrom">
+              <label class="field-label" for="availableFrom">Available From</label>
+              <input type="date" id="availableFrom" name="availableFrom" class="form-input" />
+              <span class="field-hint">Leave blank for "immediately"</span>
+            </div>
+          </div>
+
+          <!-- Negotiable checkbox -->
+          <div class="field-row" style="margin-top:4px;">
+            <div class="field-group">
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:0.9rem; color:var(--text-mid);">
+                <input
+                  type="checkbox"
+                  id="isNegotiable"
+                  name="isNegotiable"
+                  style="width:16px; height:16px; accent-color: var(--teal);"
+                />
+                Rent is negotiable
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ── SECTION 4: Preferences ── -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            Tenant Preferences
+          </div>
+
+          <div class="field-row">
+            <!-- Gender Preference -->
+            <div class="field-group" id="fg-gender">
+              <label class="field-label" for="genderPreference">Gender Preference</label>
+              <select id="genderPreference" name="genderPreference" class="form-select">
+                <option value="any">Any Gender</option>
+                <option value="male">Male Only</option>
+                <option value="female">Female Only</option>
+              </select>
+            </div>
+
+            <!-- Contact Number -->
+            <div class="field-group" id="fg-contactNumber">
+              <label class="field-label" for="contactNumber">
+                Contact Number <span class="req">*</span>
+              </label>
+              <input
+                type="tel"
+                id="contactNumber"
+                name="contactNumber"
+                class="form-input"
+                placeholder="+91 98765 43210"
+              />
+              <span class="field-hint">Number shown on the listing card</span>
+              <span class="field-error">Please enter a valid phone number</span>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ── SECTION 5: Room Photo ── -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            Room Photo
+            <span style="font-size:0.78rem; color:var(--text-light); font-weight:400; margin-left:auto;">
+              Optional — but listings with photos get 3× more views
+            </span>
+          </div>
+
+          <!--
+            IMAGE UPLOAD ZONE
+            ──────────────────
+            This is a styled drop-zone that wraps a hidden <input type="file">.
+
+            How it works:
+            1. The <input type="file"> is hidden (opacity:0) but covers the entire box
+            2. When the user clicks anywhere on the box, the input opens the file picker
+            3. When a file is picked, JS reads it and shows a preview
+            4. On form submit, JS uses FormData to send the file to the backend
+          -->
+          <div class="upload-zone-wrapper" id="fg-image">
+
+            <div class="upload-zone" id="uploadZone">
+
+              <!-- Hidden file input — covers the whole zone so it's clickable -->
+              <input
+                type="file"
+                id="imageInput"
+                name="image"
+                class="upload-input"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+              />
+
+              <!-- This <img> is hidden until user picks a file -->
+              <!-- JS sets img.src to the preview URL and shows it -->
+              <img
+                src=""
+                alt="Room preview"
+                class="upload-preview-img"
+                id="previewImg"
+              />
+
+              <!-- Remove button (×) shown on top-right corner of preview -->
+              <button
+                type="button"
+                class="upload-remove-btn"
+                id="removeImgBtn"
+                title="Remove image"
+                aria-label="Remove selected image"
+              >×</button>
+
+              <!-- Camera icon — shown before image is selected -->
+              <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+
+              <!-- Label text — shown before image is selected -->
+              <div class="upload-label-text">
+                <strong>Click to upload a room photo</strong>
+                <span>JPG, PNG, or WebP — max 5MB</span>
+              </div>
+
+              <!-- Drag & drop hint -->
+              <p class="upload-hint">or drag and drop a file here</p>
+
+            </div><!-- /#uploadZone -->
+
+            <!-- File info bar — shown after file is selected -->
+            <div class="upload-file-info" id="fileInfo">
+              <span class="file-icon">📷</span>
+              <span class="file-name" id="fileName">No file selected</span>
+              <span class="file-size" id="fileSize"></span>
+            </div>
+
+          </div><!-- /.upload-zone-wrapper -->
+        </div><!-- /.form-section (Room Photo) -->
+
+
+        <!-- ── SECTION 6: Amenities ── -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 11 12 14 22 4"/>
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+              </svg>
+            </div>
+            Amenities
+            <span style="font-size:0.78rem; color:var(--text-light); font-weight:400; margin-left:auto;">
+              Select all that apply
+            </span>
+          </div>
+
+          <!-- Each amenity is a checkbox. JS reads all checked values as an array. -->
+          <div class="amenities-grid" id="amenitiesGrid">
+            <!-- WiFi -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-wifi" name="amenities" value="WiFi" />
+              <label for="am-wifi">
+                <span class="check-dot"></span>
+                📶 WiFi
+              </label>
+            </div>
+            <!-- AC -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-ac" name="amenities" value="AC" />
+              <label for="am-ac">
+                <span class="check-dot"></span>
+                ❄️ AC
+              </label>
+            </div>
+            <!-- Washing Machine -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-washing" name="amenities" value="Washing Machine" />
+              <label for="am-washing">
+                <span class="check-dot"></span>
+                🫧 Washing Machine
+              </label>
+            </div>
+            <!-- Parking -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-parking" name="amenities" value="Parking" />
+              <label for="am-parking">
+                <span class="check-dot"></span>
+                🅿️ Parking
+              </label>
+            </div>
+            <!-- Kitchen -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-kitchen" name="amenities" value="Kitchen" />
+              <label for="am-kitchen">
+                <span class="check-dot"></span>
+                🍳 Kitchen
+              </label>
+            </div>
+            <!-- Gym -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-gym" name="amenities" value="Gym" />
+              <label for="am-gym">
+                <span class="check-dot"></span>
+                🏋️ Gym
+              </label>
+            </div>
+            <!-- Security -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-security" name="amenities" value="Security" />
+              <label for="am-security">
+                <span class="check-dot"></span>
+                🔒 Security
+              </label>
+            </div>
+            <!-- Power Backup -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-power" name="amenities" value="Power Backup" />
+              <label for="am-power">
+                <span class="check-dot"></span>
+                🔋 Power Backup
+              </label>
+            </div>
+            <!-- Furnished -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-furnished" name="amenities" value="Furnished" />
+              <label for="am-furnished">
+                <span class="check-dot"></span>
+                🛋️ Furnished
+              </label>
+            </div>
+            <!-- Water 24/7 -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-water" name="amenities" value="24/7 Water" />
+              <label for="am-water">
+                <span class="check-dot"></span>
+                💧 24/7 Water
+              </label>
+            </div>
+            <!-- CCTV -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-cctv" name="amenities" value="CCTV" />
+              <label for="am-cctv">
+                <span class="check-dot"></span>
+                📹 CCTV
+              </label>
+            </div>
+            <!-- Lift -->
+            <div class="amenity-option">
+              <input type="checkbox" id="am-lift" name="amenities" value="Lift" />
+              <label for="am-lift">
+                <span class="check-dot"></span>
+                🛗 Lift
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ── SECTION 7: Nearby Locations ── -->
+        <!--
+          NEW in v4.0: Nearby Location Finder
+          ─────────────────────────────────────
+          Users can list nearby colleges, hospitals, bus stops,
+          supermarkets, and restaurants to make their listing more
+          attractive. Each row has: place name, type, distance.
+
+          The "Add another place" button adds new rows dynamically
+          using JavaScript (see add-listing.js).
+        -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <div class="section-icon">
+              <!-- Map pin icon -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                <circle cx="12" cy="9" r="2.5"/>
+              </svg>
+            </div>
+            Nearby Locations
+            <span style="font-size:0.78rem; color:var(--text-light); font-weight:400; margin-left:auto;">
+              Optional — helps attract the right roommate
+            </span>
+          </div>
+
+          <!-- Hint text for users -->
+          <p style="font-size:0.85rem; color:var(--text-mid); margin-bottom:16px; line-height:1.6;">
+            Add nearby colleges, hospitals, bus stops, supermarkets, or restaurants.
+            This helps potential roommates understand the location at a glance.
+          </p>
+
+          <!-- Container for all nearby place rows — JS adds rows here -->
+          <div id="nearbyPlacesContainer">
+            <!-- Row 0: First nearby place (always visible) -->
+            <div class="nearby-place-row" data-index="0">
+              <div class="nearby-place-fields">
+
+                <!-- Place Name -->
+                <div class="field-group" style="flex:2;">
+                  <label class="field-label" for="np-name-0">Place Name</label>
+                  <input
+                    type="text"
+                    id="np-name-0"
+                    name="nearbyPlaces[0][name]"
+                    class="form-input"
+                    placeholder="e.g. City Hospital, ABC College"
+                    maxlength="100"
+                  />
+                </div>
+
+                <!-- Place Type -->
+                <div class="field-group" style="flex:1.5;">
+                  <label class="field-label" for="np-type-0">Type</label>
+                  <select id="np-type-0" name="nearbyPlaces[0][type]" class="form-select">
+                    <option value="">Select type</option>
+                    <option value="college">🎓 College</option>
+                    <option value="hospital">🏥 Hospital</option>
+                    <option value="bus_stop">🚌 Bus Stop</option>
+                    <option value="supermarket">🛒 Supermarket</option>
+                    <option value="restaurant">🍽️ Restaurant</option>
+                  </select>
+                </div>
+
+                <!-- Distance -->
+                <div class="field-group" style="flex:1;">
+                  <label class="field-label" for="np-dist-0">Distance</label>
+                  <input
+                    type="text"
+                    id="np-dist-0"
+                    name="nearbyPlaces[0][distance]"
+                    class="form-input"
+                    placeholder="e.g. 500 m"
+                    maxlength="50"
+                  />
+                </div>
+
+                <!-- Remove button (hidden for first row — at least one row stays) -->
+                <button
+                  type="button"
+                  class="nearby-remove-btn"
+                  onclick="removeNearbyRow(this)"
+                  title="Remove this place"
+                  style="display:none;"
+                >×</button>
+
+              </div>
+            </div>
+            <!-- More rows are added here by addNearbyRow() in add-listing.js -->
+          </div>
+
+          <!-- Add another place button -->
+          <button
+            type="button"
+            class="btn-add-nearby"
+            id="addNearbyBtn"
+            onclick="addNearbyRow()"
+          >
+            + Add another place
+          </button>
+
+        </div><!-- /.form-section (Nearby Locations) -->
+
+
+        <!-- ── SECTION 8: Google Map Embed ── -->
+        <!--
+          Users paste the Google Maps embed URL here.
+          HOW TO GET THE URL:
+          1. Go to Google Maps (maps.google.com)
+          2. Search for the location
+          3. Click Share → Embed a map
+          4. Copy ONLY the src="..." value (not the whole <iframe> tag)
+          5. Paste it in the field below
+        -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <div class="section-icon">
+              <!-- Globe / map icon -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+              </svg>
+            </div>
+            Google Map
+            <span style="font-size:0.78rem; color:var(--text-light); font-weight:400; margin-left:auto;">
+              Optional — embeds an interactive map
+            </span>
+          </div>
+
+          <div class="field-row full">
+            <div class="field-group" id="fg-googleMapLink">
+              <label class="field-label" for="googleMapLink">
+                Google Maps Embed URL
+              </label>
+              <input
+                type="url"
+                id="googleMapLink"
+                name="googleMapLink"
+                class="form-input"
+                placeholder="https://www.google.com/maps/embed?pb=..."
+              />
+              <!-- Step-by-step instructions for beginners -->
+              <span class="field-hint">
+                📍 How to get this URL:
+                Go to <strong>Google Maps</strong> → search your location →
+                click <strong>Share</strong> → <strong>Embed a map</strong> →
+                copy the value inside <code>src="..."</code>
+              </span>
+
+              <!-- Live preview: shows a small map when a valid URL is pasted -->
+              <div id="mapPreviewWrap" style="display:none; margin-top:12px;">
+                <p style="font-size:0.78rem; color:var(--teal); font-weight:600; margin-bottom:8px;">
+                  ✅ Map Preview:
+                </p>
+                <iframe
+                  id="mapPreview"
+                  src=""
+                  width="100%"
+                  height="200"
+                  style="border:0; border-radius:var(--radius-sm);"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div><!-- /.form-section (Google Map) -->
+
+
+        <!-- ── SUBMIT BAR ── -->
+        <div class="form-submit-bar">
+          <a href="./listings.html" class="btn-cancel">Cancel</a>
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <!-- Spinner shown during API call -->
+            <svg class="spinner" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"
+                stroke-dasharray="31.416" stroke-dashoffset="10" stroke-linecap="round"/>
+            </svg>
+            <span class="btn-text">🏠 Post Listing</span>
+          </button>
+        </div>
+
+      </form><!-- /#addListingForm -->
+
+    </div><!-- /.add-listing-inner -->
+  </div><!-- /.add-listing-page -->
+
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JS -->
+  <script src="./js/navbar.js"></script>
+  <script src="./js/add-listing.js"></script>
+</body>
+</html>

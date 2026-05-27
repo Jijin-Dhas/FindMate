@@ -1,0 +1,1128 @@
+/* ============================================================
+   FindMate – Register Page Stylesheet
+   
+   Structure:
+   1. CSS Variables (design tokens)
+   2. Reset & Base
+   3. Layout (page-wrapper, brand-panel, form-panel)
+   4. Brand Panel (left side)
+   5. Form Panel (right side)
+   6. Input Fields & Floating Labels
+   7. Password Strength Bar
+   8. Buttons
+   9. Alerts (success/error)
+   10. Divider & Social buttons
+   11. Animations & Keyframes
+   12. Responsive (tablet + mobile)
+============================================================ */
+
+
+/* ──────────────────────────────────────────────────────────
+   1. CSS VARIABLES — change these to retheme the entire page
+────────────────────────────────────────────────────────── */
+:root {
+  /* Brand colours */
+  --navy:        #0B2545;   /* dark left panel */
+  --navy-mid:    #134074;   /* mid-blue for accents */
+  --teal:        #13C4A3;   /* CTA accent */
+  --teal-dark:   #0FA38A;
+  --amber:       #F5A623;   /* testimonial stars, stat numbers */
+  --white:       #FFFFFF;
+  --off-white:   #F8FAFC;
+
+  /* Form colours */
+  --form-bg:     #FFFFFF;
+  --input-bg:    #F1F5F9;
+  --input-border:#CBD5E1;
+  --input-focus: #13C4A3;
+  --label-color: #64748B;
+  --text-dark:   #0F172A;
+  --text-mid:    #475569;
+  --text-light:  #94A3B8;
+
+  /* Status colours */
+  --success:     #22C55E;
+  --error:       #EF4444;
+  --warning:     #F59E0B;
+
+  /* Strength levels */
+  --strength-weak:   #EF4444;
+  --strength-fair:   #F59E0B;
+  --strength-good:   #3B82F6;
+  --strength-strong: #22C55E;
+
+  /* Spacing & shape */
+  --radius-sm:   8px;
+  --radius-md:   14px;
+  --radius-lg:   24px;
+  --shadow-card: 0 20px 60px rgba(11,37,69,0.12);
+  --shadow-input: 0 2px 8px rgba(19,196,163,0.15);
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* Transition */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   2. RESET & BASE
+────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--off-white);
+  color: var(--text-dark);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input { font-family: inherit; }
+
+
+/* ──────────────────────────────────────────────────────────
+   3. LAYOUT
+────────────────────────────────────────────────────────── */
+.page-wrapper {
+  display: grid;
+  grid-template-columns: 5fr 6fr;   /* 45/55 — more space for the form */
+  min-height: 100vh;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   4. BRAND PANEL (left side — dark blue)
+────────────────────────────────────────────────────────── */
+.brand-panel {
+  position: relative;
+  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 36px 44px;
+  overflow: hidden;  /* keeps blobs clipped */
+}
+
+/* ── Decorative floating blobs ── */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.18;
+  pointer-events: none;
+}
+.blob-1 {
+  width: 400px; height: 400px;
+  background: var(--teal);
+  top: -120px; right: -100px;
+  animation: floatBlob 10s ease-in-out infinite;
+}
+.blob-2 {
+  width: 300px; height: 300px;
+  background: var(--amber);
+  bottom: 80px; left: -80px;
+  animation: floatBlob 14s ease-in-out infinite reverse;
+}
+.blob-3 {
+  width: 200px; height: 200px;
+  background: #6366F1;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: floatBlob 8s ease-in-out infinite 3s;
+}
+
+/* ── Logo ── */
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1;
+}
+.logo-icon {
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.logo-icon svg { width: 100%; height: 100%; }
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.3px;
+}
+
+/* ── Hero Headline ── */
+.brand-content { z-index: 1; }
+.brand-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+.brand-headline em {
+  font-style: italic;
+  color: var(--teal);
+}
+.brand-subtext {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  max-width: 340px;
+}
+
+/* ── Stats Row ── */
+.brand-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 1;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  backdrop-filter: blur(12px);
+}
+.stat { text-align: center; }
+.stat-number {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--amber);
+}
+.stat-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 2px;
+}
+.stat-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.2);
+}
+
+/* ── Testimonial Card ── */
+.testimonial-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  backdrop-filter: blur(12px);
+  z-index: 1;
+}
+.testimonial-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--amber));
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--white);
+  flex-shrink: 0;
+}
+.testimonial-body { flex: 1; }
+.testimonial-text {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.5;
+}
+.testimonial-author {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+  margin-top: 4px;
+}
+.testimonial-stars {
+  color: var(--amber);
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  flex-shrink: 0;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   5. FORM PANEL (right side)
+────────────────────────────────────────────────────────── */
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 28px 48px;
+  background: var(--off-white);
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+.form-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+  color: var(--text-mid);
+}
+.link-btn {
+  color: var(--navy-mid);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+.link-btn:hover { color: var(--teal-dark); }
+
+/* ── Form Card ── */
+.form-card {
+  background: var(--form-bg);
+  border-radius: var(--radius-lg);
+  padding: 30px 34px;
+  box-shadow: 0 4px 32px rgba(11,37,69,0.10), 0 1px 4px rgba(11,37,69,0.06);
+  border: 1px solid rgba(226,232,240,0.8);
+  animation: slideUp 0.55s var(--ease) both;
+}
+
+.form-card-header { margin-bottom: 22px; }
+.form-title {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+.form-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   6. INPUT FIELDS & FLOATING LABELS
+   
+   How floating labels work:
+   - The label sits inside the input by default (via position: absolute)
+   - When the input is focused OR has content (placeholder=" " trick),
+     the label floats up using the :focus and :not(:placeholder-shown)
+     CSS selectors.
+────────────────────────────────────────────────────────── */
+.field-group {
+  margin-bottom: 14px;
+  animation: slideUp 0.5s var(--ease) both;
+}
+
+/* Stagger each field group's entrance */
+.field-group:nth-child(1) { animation-delay: 0.1s; }
+.field-group:nth-child(2) { animation-delay: 0.18s; }
+.field-group:nth-child(3) { animation-delay: 0.26s; }
+.field-group:nth-child(4) { animation-delay: 0.34s; }
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* The actual <input> element */
+.form-input {
+  width: 100%;
+  height: 52px;
+  padding: 18px 48px 6px 48px;  /* top padding makes room for the floating label */
+  background: var(--input-bg);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  color: var(--text-dark);
+  font-weight: 500;
+  transition:
+    border-color 0.25s var(--ease),
+    background 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+  outline: none;
+}
+
+.form-input:focus {
+  background: var(--white);
+  border-color: var(--input-focus);
+  box-shadow: var(--shadow-input);
+}
+
+/* Floating Label */
+.form-label {
+  position: absolute;
+  left: 48px;          /* aligns with padded text */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.88rem;
+  color: var(--label-color);
+  pointer-events: none;  /* clicks pass through to the input */
+  transition: all 0.22s var(--ease);
+  transform-origin: left top;
+}
+
+/* Float the label UP when input is focused or has content */
+.form-input:focus ~ .form-label,
+.form-input:not(:placeholder-shown) ~ .form-label {
+  top: 10px;
+  transform: translateY(0) scale(0.76);
+  color: var(--input-focus);
+  font-weight: 600;
+}
+
+/* Left icon inside the input */
+.input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px; height: 20px;
+  color: var(--text-light);
+  pointer-events: none;
+  transition: color 0.25s;
+}
+.input-icon svg { width: 100%; height: 100%; }
+.form-input:focus ~ .form-label ~ .input-icon,
+.input-wrapper:focus-within .input-icon { color: var(--input-focus); }
+
+/* Right-side password toggle button */
+.toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px; height: 20px;
+  color: var(--text-light);
+  display: grid;
+  place-items: center;
+  transition: color 0.2s;
+}
+.toggle-password:hover { color: var(--teal); }
+.toggle-password svg { width: 18px; height: 18px; }
+
+/* Validation states */
+.field-group.is-valid .form-input   { border-color: var(--success); background: var(--white); }
+.field-group.is-error .form-input   { border-color: var(--error);   background: #FFF5F5; }
+.field-group.is-valid .form-label   { color: var(--success); }
+.field-group.is-error .form-label   { color: var(--error); }
+
+/* Inline error message below each field */
+.field-error {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--error);
+  margin-top: 4px;
+  padding-left: 4px;
+  min-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.field-group.is-error .field-error {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   7. PASSWORD STRENGTH BAR
+────────────────────────────────────────────────────────── */
+.strength-bar-wrapper {
+  display: none;          /* shown by JS when user starts typing */
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.strength-bar-wrapper.visible { display: flex; }
+
+.strength-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--input-bg);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  transition: width 0.4s var(--ease), background 0.4s;
+}
+
+/* Strength levels controlled by JS adding data-strength attribute */
+.strength-fill[data-strength="1"] { width: 25%; background: var(--strength-weak); }
+.strength-fill[data-strength="2"] { width: 50%; background: var(--strength-fair); }
+.strength-fill[data-strength="3"] { width: 75%; background: var(--strength-good); }
+.strength-fill[data-strength="4"] { width: 100%; background: var(--strength-strong); }
+
+.strength-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 50px;
+  text-align: right;
+  transition: color 0.3s;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   8. TERMS CHECKBOX
+────────────────────────────────────────────────────────── */
+.terms-row { margin-bottom: 18px; }
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.checkbox-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+.custom-checkbox {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border: 2px solid var(--input-border);
+  border-radius: 5px;
+  background: var(--input-bg);
+  display: grid;
+  place-items: center;
+  margin-top: 1px;
+  transition: all 0.2s var(--ease);
+}
+.custom-checkbox::after {
+  content: '';
+  width: 5px; height: 9px;
+  border-right: 2px solid var(--white);
+  border-bottom: 2px solid var(--white);
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.15s var(--ease);
+  margin-top: -2px;
+}
+.checkbox-label input:checked ~ .custom-checkbox {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+.checkbox-label input:checked ~ .custom-checkbox::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.checkbox-text {
+  font-size: 0.83rem;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+.terms-link {
+  color: var(--navy-mid);
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.terms-link:hover { border-color: var(--navy-mid); }
+
+
+/* ──────────────────────────────────────────────────────────
+   8. BUTTONS
+────────────────────────────────────────────────────────── */
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  background: linear-gradient(135deg, var(--navy-mid) 0%, var(--teal) 100%);
+  color: var(--white);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(19,196,163,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.12);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.submit-btn:hover::before { opacity: 1; }
+.submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(19,196,163,0.4);
+}
+.submit-btn:active { transform: translateY(0); }
+.submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-spinner {
+  display: none;
+  width: 20px; height: 20px;
+}
+.btn-spinner svg {
+  width: 100%; height: 100%;
+  animation: spin 0.9s linear infinite;
+}
+.submit-btn.loading .btn-text   { display: none; }
+.submit-btn.loading .btn-spinner { display: block; }
+
+
+/* ──────────────────────────────────────────────────────────
+   9. ALERTS (success / error banners)
+────────────────────────────────────────────────────────── */
+.alert {
+  display: none;          /* hidden by default; shown by JS */
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 12px;
+  animation: slideUp 0.3s var(--ease) both;
+}
+.alert.visible { display: flex; }
+
+.alert-success {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  color: #166534;
+}
+.alert-error {
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
+  color: #9F1239;
+}
+.alert-icon {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.alert-success .alert-icon { background: var(--success); color: white; }
+.alert-error   .alert-icon { background: var(--error);   color: white; }
+
+
+/* ──────────────────────────────────────────────────────────
+   10. DIVIDER & SOCIAL BUTTONS
+────────────────────────────────────────────────────────── */
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 20px 0 14px;
+}
+.divider::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--input-border);
+}
+.divider span {
+  position: relative;
+  background: var(--form-bg);
+  padding: 0 14px;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.social-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  background: var(--white);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.social-btn:hover {
+  border-color: var(--navy-mid);
+  background: var(--off-white);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   11. ANIMATIONS & KEYFRAMES
+────────────────────────────────────────────────────────── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatBlob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(20px, -30px) scale(1.05); }
+  66%       { transform: translate(-15px, 15px) scale(0.95); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-5px); }
+  80%       { transform: translateX(5px); }
+}
+
+/* Shake animation class added by JS on validation fail */
+.shake { animation: shake 0.45s var(--ease); }
+
+
+/* ──────────────────────────────────────────────────────────
+   12. RESPONSIVE
+────────────────────────────────────────────────────────── */
+
+/* Tablet (≤ 1024px): stack panels vertically */
+@media (max-width: 1024px) {
+  .page-wrapper {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .brand-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 22px 32px;
+    gap: 14px;
+    min-height: auto;
+  }
+
+  .brand-headline { font-size: 1.7rem; }
+  .brand-stats { display: none; }
+  .testimonial-card { display: none; }
+  .blob { display: none; }
+
+  .form-panel {
+    padding: 28px 36px;
+    min-height: auto;
+    justify-content: flex-start;
+  }
+  .form-card { padding: 28px 32px; }
+}
+
+/* Mobile (≤ 640px): single column, compact */
+@media (max-width: 640px) {
+  .brand-panel { padding: 16px 14px; }
+  .brand-headline { font-size: 1.4rem; }
+  .brand-subtext { display: none; }
+  .brand-logo { margin-bottom: 0; }
+
+  .form-panel {
+    padding: 16px 14px;
+    justify-content: flex-start;
+    min-height: auto;
+  }
+  .form-panel-header { margin-bottom: 12px; }
+
+  .form-card {
+    padding: 20px 16px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 16px rgba(11,37,69,0.08);
+  }
+  .form-title { font-size: 1.35rem; }
+
+  .social-row { grid-template-columns: 1fr; }
+}
+
+
+/* ============================================================
+   FINDMATE – GLOBAL NAVBAR  (added for UI consistency)
+   
+   This section defines ONE shared navbar used by every page.
+   Previously each page had its own conflicting nav styles.
+   Now style.css is the single source of truth for the navbar.
+
+   HOW TO USE ON ANY PAGE:
+   1. Link this style.css in <head>
+   2. Copy the <nav class="navbar"> block below into your page
+   3. Add class="active" to the link that matches the current page
+   
+   SECTIONS:
+   A. Navbar shell & brand logo
+   B. Nav links & active state
+   C. Auth elements (user pill, buttons)
+   D. Hamburger toggle (mobile)
+   E. Mobile drawer
+   F. Responsive breakpoints
+============================================================ */
+
+
+/* ──────────────────────────────────────────────────────────
+   A. NAVBAR SHELL
+   - Sticky at top (stays visible when scrolling)
+   - Navy background matching FindMate brand
+   - flex row: logo LEFT, links RIGHT
+────────────────────────────────────────────────────────── */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 500;                         /* always above page content */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 64px;
+  background: var(--navy);             /* #0B2545 — dark navy */
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   B. BRAND / LOGO (left side)
+────────────────────────────────────────────────────────── */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+  text-decoration: none;
+  flex-shrink: 0;                       /* never shrink on small screens */
+}
+
+/* Square icon box that holds the SVG house */
+.navbar-logo {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border: 1px solid rgba(255,255,255,0.18);
+  flex-shrink: 0;
+}
+.navbar-logo svg { width: 100%; height: 100%; }
+
+/* "FindMate" wordmark */
+.navbar-title {
+  font-family: var(--font-display);   /* Playfair Display */
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.2px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   C. NAV LINKS (right side)
+   All links sit in a flex row. On mobile they go into a drawer.
+────────────────────────────────────────────────────────── */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;                            /* tight spacing between items */
+}
+
+/* Every navigation anchor/button shares this base style */
+.nav-link {
+  padding: 7px 13px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.72);
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.nav-link:hover {
+  color: var(--white);
+  background: rgba(255,255,255,0.08);
+}
+
+/* Active page link — teal colour, no background fill */
+.nav-link.active {
+  color: var(--teal);
+  font-weight: 600;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   D. AUTH ELEMENTS
+────────────────────────────────────────────────────────── */
+
+/* "Sign In" and "+ Post Room" — teal filled pill buttons */
+.btn-nav-primary {
+  padding: 7px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--teal);
+  color: var(--navy);                  /* navy text on teal = good contrast */
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.15s;
+  margin-left: 4px;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+.btn-nav-primary:hover {
+  background: var(--teal-dark);
+  transform: translateY(-1px);
+}
+
+/* Logged-in user pill: avatar circle + name */
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.08);
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+/* Circular avatar with gradient background */
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--amber));
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--navy);
+  flex-shrink: 0;
+}
+
+/* "Sign Out" text link — turns red on hover */
+.btn-logout {
+  padding: 7px 13px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  transition: color 0.2s, background 0.2s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  white-space: nowrap;
+}
+.btn-logout:hover {
+  color: var(--error);
+  background: rgba(239,68,68,0.1);
+}
+
+/* Admin link — amber tinted pill, visible only to admins via JS */
+.nav-admin-link {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--amber);
+  background: rgba(245,166,35,0.10);
+  border: 1px solid rgba(245,166,35,0.22);
+  transition: background 0.2s var(--ease);
+  white-space: nowrap;
+  text-decoration: none;
+  margin-left: 4px;
+}
+.nav-admin-link:hover {
+  background: rgba(245,166,35,0.20);
+}
+
+
+   E. HAMBURGER TOGGLE (mobile only)
+   Hidden on desktop. Shown below 768px.
+   Three horizontal bars that animate into an ✕ when open.
+────────────────────────────────────────────────────────── */
+.nav-hamburger {
+  display: none;                        /* hidden on desktop */
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.08);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nav-hamburger span {
+  display: block;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: transform 0.25s, opacity 0.2s, width 0.2s;
+  transform-origin: center;
+}
+
+/* When the menu is open, animate bars into ✕ */
+.navbar.menu-open .nav-hamburger span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.navbar.menu-open .nav-hamburger span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.navbar.menu-open .nav-hamburger span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   F. RESPONSIVE BREAKPOINTS
+────────────────────────────────────────────────────────── */
+
+/* ── Tablet (≤ 900px): tighten padding, shrink text ── */
+@media (max-width: 900px) {
+  .navbar { padding: 0 24px; }
+  .nav-link { padding: 7px 10px; font-size: 0.84rem; }
+  .btn-nav-primary { padding: 7px 14px; }
+}
+
+/* ── Mobile (≤ 768px): hamburger + slide-down drawer ── */
+@media (max-width: 768px) {
+  .navbar { padding: 0 16px; height: 56px; }
+
+  /* Show hamburger button */
+  .nav-hamburger { display: flex; }
+
+  /* Hide desktop link row by default */
+  .navbar-links {
+    display: none;                      /* hidden until menu-open */
+    position: fixed;                    /* overlay the page */
+    top: 56px;                          /* starts right below the navbar */
+    left: 0;
+    right: 0;
+    z-index: 499;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 16px;
+    background: var(--navy);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    animation: slideDown 0.22s ease;
+  }
+
+  /* Show drawer when navbar has .menu-open class */
+  .navbar.menu-open .navbar-links { display: flex; }
+
+  /* Mobile: each link takes full width */
+  .nav-link {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    border-radius: var(--radius-sm);
+  }
+  .nav-link.active {
+    background: rgba(19,196,163,0.12);
+  }
+
+  /* Divider line before auth buttons */
+  .nav-mobile-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 6px 0;
+  }
+
+  /* Auth buttons full-width on mobile */
+  .btn-nav-primary {
+    margin-left: 0;
+    padding: 12px 16px;
+    text-align: center;
+    border-radius: var(--radius-sm);
+    display: block;
+  }
+  .btn-logout {
+    padding: 12px 16px;
+    text-align: left;
+    width: 100%;
+  }
+  .user-pill {
+    margin-left: 0;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.06);
+  }
+  .nav-admin-link {
+    margin-left: 0;
+    display: block;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: rgba(245,166,35,0.08);
+    font-size: 0.92rem;
+  }
+}
+
+/* ── Small mobile (≤ 480px) ── */
+@media (max-width: 480px) {
+  .navbar-title { font-size: 1.05rem; }
+}
+
+/* Drawer slide-down animation */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Overlay behind mobile menu (optional dark scrim) ── */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  top: 56px;
+  background: rgba(0,0,0,0.4);
+  z-index: 498;
+}
+.navbar.menu-open ~ .nav-overlay { display: block; }

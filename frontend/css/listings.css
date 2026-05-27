@@ -1,0 +1,1852 @@
+/* ============================================================
+   FindMate – Listings & Add-Listing Shared Stylesheet
+   
+   Design tokens match the existing style.css (same :root vars)
+   
+   Sections:
+   1.  CSS Variables (extends existing ones)
+   2.  Page Layout (navbar + main content)
+   3.  Navbar
+   4.  Hero / Page Header
+   5.  Filter Bar
+   6.  Listings Grid
+   7.  Listing Card
+   8.  Card Badges & Tags
+   9.  Empty State
+   10. Add-Listing Form Page
+   11. Form Sections & Fields
+   12. Amenities Checkbox Grid
+   13. Modal (Edit Listing)
+   14. Toast Notifications
+   15. Loading Skeleton
+   16. Responsive
+============================================================ */
+
+
+/* ──────────────────────────────────────────────────────────
+   1. CSS VARIABLES (same palette as style.css)
+────────────────────────────────────────────────────────── */
+:root {
+  --navy:        #0B2545;
+  --navy-mid:    #134074;
+  --navy-light:  #1a5276;
+  --teal:        #13C4A3;
+  --teal-dark:   #0FA38A;
+  --amber:       #F5A623;
+  --white:       #FFFFFF;
+  --off-white:   #F8FAFC;
+
+  --form-bg:     #FFFFFF;
+  --input-bg:    #F1F5F9;
+  --input-border:#CBD5E1;
+  --input-focus: #13C4A3;
+  --label-color: #64748B;
+  --text-dark:   #0F172A;
+  --text-mid:    #475569;
+  --text-light:  #94A3B8;
+
+  --success:  #22C55E;
+  --error:    #EF4444;
+  --warning:  #F59E0B;
+
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  24px;
+  --shadow-card: 0 4px 24px rgba(11,37,69,0.10);
+  --shadow-hover: 0 12px 40px rgba(11,37,69,0.18);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   2. RESET & BASE
+────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--off-white);
+  color: var(--text-dark);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, select, textarea { font-family: inherit; }
+img { max-width: 100%; }
+
+
+/* 3. NAVBAR — styles moved to style.css for global consistency */
+
+/* ──────────────────────────────────────────────────────────
+   4. PAGE HERO / HEADER
+────────────────────────────────────────────────────────── */
+.page-hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  padding: 52px 40px 56px;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  background: var(--teal);
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.08;
+  top: -200px; right: -100px;
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+.hero-text h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.hero-text h1 em { font-style: italic; color: var(--teal); }
+.hero-text p {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.6);
+  max-width: 440px;
+}
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--amber);
+}
+.hero-stat-label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   5. FILTER BAR
+────────────────────────────────────────────────────────── */
+.filter-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--input-border);
+  padding: 16px 40px;
+  position: sticky;
+  top: 64px; /* below navbar */
+  z-index: 90;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.filter-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Search input in the filter bar */
+.filter-search {
+  flex: 1;
+  min-width: 180px;
+  position: relative;
+}
+.filter-search input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px 0 40px;
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  background: var(--input-bg);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.filter-search input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(19,196,163,0.12);
+  background: var(--white);
+}
+.filter-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  width: 16px; height: 16px;
+  pointer-events: none;
+}
+
+/* Dropdowns in filter */
+.filter-select {
+  height: 42px;
+  padding: 0 32px 0 12px;
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--text-dark);
+  background: var(--input-bg);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  transition: border-color 0.2s;
+}
+.filter-select:focus { border-color: var(--teal); background-color: var(--white); }
+
+/* Clear filters button */
+.btn-clear-filters {
+  height: 42px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  border: 1.5px solid var(--input-border);
+  transition: all 0.2s;
+}
+.btn-clear-filters:hover {
+  border-color: var(--navy-mid);
+  color: var(--navy-mid);
+  background: rgba(19,64,116,0.05);
+}
+
+/* Results count */
+.filter-count {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  font-weight: 500;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.filter-count strong { color: var(--text-dark); }
+
+
+/* ──────────────────────────────────────────────────────────
+   6. LISTINGS GRID
+────────────────────────────────────────────────────────── */
+.listings-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 40px 60px;
+}
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   7. LISTING CARD
+────────────────────────────────────────────────────────── */
+.listing-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(203,213,225,0.6);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease);
+  animation: fadeInUp 0.4s var(--ease) both;
+}
+.listing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Coloured accent strip at the top of each card */
+.card-accent {
+  height: 4px;
+  background: linear-gradient(90deg, var(--navy-mid), var(--teal));
+}
+
+/* Card body */
+.card-body {
+  padding: 22px 22px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Title row: title + room-type badge */
+.card-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.3;
+  flex: 1;
+}
+
+/* Room type badge */
+.badge {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badge-single    { background: #EFF6FF; color: #1D4ED8; }
+.badge-shared    { background: #FEF3C7; color: #92400E; }
+.badge-entire_flat { background: #F0FDF4; color: #166534; }
+.badge-pg        { background: #FDF4FF; color: #7E22CE; }
+
+/* Location row */
+.card-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.875rem;
+  color: var(--text-mid);
+}
+.card-location svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--teal); }
+
+/* Rent display */
+.card-rent {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.rent-amount {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+.rent-currency { font-size: 0.9rem; font-weight: 600; color: var(--navy); }
+.rent-period  { font-size: 0.82rem; color: var(--text-light); }
+.rent-tag {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #FEF9C3;
+  color: #78350F;
+}
+
+/* Description snippet */
+.card-desc {
+  font-size: 0.875rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;     /* show only 2 lines, then ellipsis */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Meta row: gender pref + available from */
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+.card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.card-meta-item svg { width: 13px; height: 13px; }
+
+/* Amenities tags */
+.card-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.amenity-chip {
+  padding: 3px 10px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-mid);
+}
+.amenity-more {
+  padding: 3px 10px;
+  background: var(--teal);
+  color: var(--white);
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* ── CARD FOOTER ─────────────────────────────────────────
+   Restructured in v8.0 for clean column layout:
+     Row 1 — poster identity + safety badges
+     Row 2 — contact row (masked number + reveal)
+     Row 3 — action buttons (uniform size)
+──────────────────────────────────────────────────────── */
+.card-footer {
+  padding:        14px 20px 16px;
+  border-top:     1px solid var(--input-border);
+  background:     var(--off-white);
+  display:        flex;
+  flex-direction: column;
+  gap:            10px;
+}
+
+/* ── Row 1: poster identity ── */
+.card-poster {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+}
+.poster-avatar {
+  width:       34px;
+  height:      34px;
+  border-radius: 50%;
+  background:  linear-gradient(135deg, var(--navy-mid), var(--teal));
+  display:     grid;
+  place-items: center;
+  font-size:   0.78rem;
+  font-weight: 700;
+  color:       var(--white);
+  flex-shrink: 0;
+  box-shadow:  0 2px 6px rgba(11,37,69,0.18);
+}
+.poster-info {
+  flex:        1;
+  min-width:   0;
+  display:     flex;
+  flex-direction: column;
+  gap:         1px;
+}
+.poster-name {
+  font-size:     0.84rem;
+  font-weight:   700;
+  color:         var(--text-dark);
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+.poster-role-tag {
+  font-size:  0.7rem;
+  color:      var(--text-light);
+  font-weight: 500;
+}
+
+/* ── Row 2: masked contact ── */
+.card-contact-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  padding:     7px 10px;
+  background:  var(--white);
+  border:      1px solid var(--input-border);
+  border-radius: 8px;
+  font-size:   0.8rem;
+}
+.contact-icon {
+  font-size:   14px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+/* Privacy-only notice replacing the old phone/reveal row */
+.card-privacy-notice {
+  background:  rgba(19,196,163,0.06);
+  border-color: rgba(19,196,163,0.22);
+}
+.contact-privacy-text {
+  font-size:   0.78rem;
+  font-weight: 600;
+  color:       var(--teal-dark);
+  flex:        1;
+  letter-spacing: 0.2px;
+}
+
+/* ── Row 3: action buttons ── */
+.card-actions {
+  display:  flex;
+  gap:      7px;
+  flex-wrap: nowrap;
+}
+
+/* ── Unified base for all card action buttons ── */
+.card-btn {
+  flex:            1;
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             5px;
+  height:          34px;
+  padding:         0 12px;
+  border-radius:   8px;
+  font-family:     var(--font-body);
+  font-size:       0.78rem;
+  font-weight:     700;
+  cursor:          pointer;
+  border:          1.5px solid transparent;
+  transition:      background 0.18s var(--ease),
+                   border-color 0.18s var(--ease),
+                   color 0.18s var(--ease),
+                   transform 0.14s var(--ease),
+                   box-shadow 0.18s var(--ease);
+  text-decoration: none;
+  white-space:     nowrap;
+  line-height:     1;
+}
+.card-btn:active { transform: scale(0.96); }
+
+/* View button — teal ghost */
+.card-btn-view {
+  background:   rgba(19,196,163,0.09);
+  color:        var(--teal-dark);
+  border-color: rgba(19,196,163,0.30);
+}
+.card-btn-view:hover {
+  background:   var(--teal);
+  color:        var(--white);
+  border-color: var(--teal);
+  box-shadow:   0 3px 10px rgba(19,196,163,0.28);
+  transform:    translateY(-1px);
+}
+
+/* Chat button — navy ghost */
+.card-btn-chat {
+  background:   rgba(19,64,116,0.07);
+  color:        var(--navy-mid);
+  border-color: rgba(19,64,116,0.20);
+}
+.card-btn-chat:hover {
+  background:   var(--navy-mid);
+  color:        var(--white);
+  border-color: var(--navy-mid);
+  box-shadow:   0 3px 10px rgba(19,64,116,0.22);
+  transform:    translateY(-1px);
+}
+
+/* Report button — red ghost */
+.card-btn-report {
+  background:   rgba(239,68,68,0.06);
+  color:        #dc2626;
+  border-color: rgba(239,68,68,0.22);
+}
+.card-btn-report:hover {
+  background:   rgba(239,68,68,0.14);
+  border-color: rgba(239,68,68,0.42);
+  transform:    translateY(-1px);
+}
+
+/* Owner edit button */
+.card-btn-edit {
+  background:   rgba(19,64,116,0.07);
+  color:        var(--navy-mid);
+  border-color: rgba(19,64,116,0.20);
+}
+.card-btn-edit:hover {
+  background:   var(--navy-mid);
+  color:        var(--white);
+  border-color: var(--navy-mid);
+  transform:    translateY(-1px);
+}
+
+/* Owner delete button */
+.card-btn-delete {
+  background:   rgba(239,68,68,0.07);
+  color:        var(--error);
+  border-color: rgba(239,68,68,0.22);
+}
+.card-btn-delete:hover {
+  background:   var(--error);
+  color:        var(--white);
+  border-color: var(--error);
+  transform:    translateY(-1px);
+}
+
+/* Keep legacy btn-edit/btn-delete selectors working in modals/forms */
+.btn-edit, .btn-delete {
+  padding:       6px 14px;
+  border-radius: var(--radius-sm);
+  font-size:     0.8rem;
+  font-weight:   600;
+  transition:    all 0.18s;
+}
+.btn-edit {
+  background:  rgba(19,64,116,0.08);
+  color:       var(--navy-mid);
+  border:      1.5px solid rgba(19,64,116,0.2);
+}
+.btn-edit:hover { background: var(--navy-mid); color: var(--white); }
+.btn-delete {
+  background:  rgba(239,68,68,0.08);
+  color:       var(--error);
+  border:      1.5px solid rgba(239,68,68,0.2);
+}
+.btn-delete:hover { background: var(--error); color: var(--white); }
+
+/* Legacy .btn-chat-listing kept for matchings.html compatibility */
+.btn-chat-listing {
+  display:     inline-flex;
+  align-items: center;
+  gap:         5px;
+  padding:     6px 14px;
+  border-radius: var(--radius-sm);
+  font-size:   0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  background:  rgba(19,196,161,0.12);
+  color:       #0ea58a;
+  border:      1.5px solid rgba(19,196,161,0.35);
+  transition:  all 0.18s;
+  cursor:      pointer;
+  white-space: nowrap;
+}
+.btn-chat-listing:hover {
+  background:   #13C4A1;
+  color:        #fff;
+  border-color: #13C4A1;
+  transform:    translateY(-1px);
+  box-shadow:   0 3px 10px rgba(19,196,161,0.3);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   8. EMPTY STATE
+────────────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 80px 24px;
+  grid-column: 1 / -1; /* span full grid width */
+}
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+.empty-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+.empty-text {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin-bottom: 28px;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+.btn-empty-cta {
+  display: inline-block;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, var(--navy-mid), var(--teal));
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-empty-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+
+/* ──────────────────────────────────────────────────────────
+   9. ADD-LISTING PAGE LAYOUT
+────────────────────────────────────────────────────────── */
+.add-listing-page {
+  min-height: calc(100vh - 64px);
+  background: var(--off-white);
+  padding: 40px 24px 80px;
+}
+.add-listing-inner {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* Page heading */
+.page-heading {
+  margin-bottom: 32px;
+}
+.page-heading h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.page-heading p {
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+/* Steps breadcrumb */
+.form-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 32px;
+  background: var(--white);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  padding: 4px;
+}
+.step-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-light);
+  transition: all 0.25s;
+}
+.step-item.active {
+  background: var(--navy);
+  color: var(--white);
+}
+.step-item .step-num {
+  display: inline-block;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: currentColor;
+  color: var(--navy);
+  font-size: 0.7rem;
+  line-height: 22px;
+  margin-right: 6px;
+  opacity: 0.4;
+}
+.step-item.active .step-num {
+  background: var(--teal);
+  color: var(--navy);
+  opacity: 1;
+}
+
+/* Form card sections */
+.form-section {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--input-border);
+  padding: 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.form-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--input-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.form-section-title .section-icon {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--navy-mid), var(--teal));
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.form-section-title .section-icon svg {
+  width: 16px; height: 16px;
+  color: var(--white);
+}
+
+/* Two-column grid inside form sections */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.field-row.full { grid-template-columns: 1fr; }
+.field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+/* Individual field group */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.field-label .req {
+  color: var(--error);
+  margin-left: 2px;
+}
+
+/* Form inputs (text, number, date, select, textarea) */
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--input-focus);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(19,196,163,0.12);
+}
+.form-input.invalid,
+.form-select.invalid,
+.form-textarea.invalid {
+  border-color: var(--error);
+  background: #FFF5F5;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.6;
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* Input with prefix symbol (e.g. ₹) */
+.input-with-prefix {
+  position: relative;
+}
+.input-prefix {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 700;
+  color: var(--text-mid);
+  font-size: 1rem;
+  pointer-events: none;
+}
+.input-with-prefix .form-input { padding-left: 28px; }
+
+/* Field hint text */
+.field-hint {
+  font-size: 0.76rem;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+/* Field error message */
+.field-error {
+  font-size: 0.76rem;
+  color: var(--error);
+  margin-top: 2px;
+  display: none;
+}
+.field-group.has-error .field-error  { display: block; }
+.field-group.has-error .form-input,
+.field-group.has-error .form-select,
+.field-group.has-error .form-textarea { border-color: var(--error); background: #FFF5F5; }
+
+
+/* ──────────────────────────────────────────────────────────
+   10. AMENITIES CHECKBOX GRID
+────────────────────────────────────────────────────────── */
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+/* Each amenity option is a hidden checkbox + visible label */
+.amenity-option input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+.amenity-option label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  background: var(--input-bg);
+  transition: all 0.18s;
+  user-select: none;
+}
+.amenity-option label:hover {
+  border-color: var(--teal);
+  background: rgba(19,196,163,0.06);
+  color: var(--text-dark);
+}
+.amenity-option input:checked + label {
+  border-color: var(--teal);
+  background: rgba(19,196,163,0.1);
+  color: var(--navy);
+  font-weight: 600;
+}
+.amenity-option .check-dot {
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  border: 2px solid var(--input-border);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  transition: all 0.18s;
+}
+.amenity-option input:checked + label .check-dot {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+.amenity-option input:checked + label .check-dot::after {
+  content: '';
+  width: 5px; height: 8px;
+  border-right: 2px solid var(--white);
+  border-bottom: 2px solid var(--white);
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   11. FORM SUBMIT BUTTON
+────────────────────────────────────────────────────────── */
+.form-submit-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+.btn-cancel {
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  border: 1.5px solid var(--input-border);
+  transition: all 0.18s;
+}
+.btn-cancel:hover { border-color: var(--text-dark); color: var(--text-dark); }
+
+.btn-submit {
+  padding: 13px 36px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--navy-mid), var(--teal));
+  box-shadow: 0 4px 16px rgba(19,196,163,0.3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.btn-submit:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(19,196,163,0.4);
+}
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-submit .spinner {
+  width: 18px; height: 18px;
+  animation: spin 0.8s linear infinite;
+  display: none;
+}
+.btn-submit.loading .btn-text  { display: none; }
+.btn-submit.loading .spinner   { display: block; }
+
+
+/* ──────────────────────────────────────────────────────────
+   12. EDIT MODAL
+────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11,37,69,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: none;
+  place-items: center;
+  padding: 24px;
+}
+.modal-overlay.open { display: grid; }
+
+.modal {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  width: 100%;
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s var(--ease) both;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+.modal-close {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  color: var(--text-light);
+  transition: all 0.18s;
+}
+.modal-close:hover { background: var(--input-bg); color: var(--text-dark); }
+
+
+/* ──────────────────────────────────────────────────────────
+   13. TOAST NOTIFICATIONS
+────────────────────────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  animation: slideInRight 0.3s var(--ease) both;
+  pointer-events: all;
+  min-width: 260px;
+  max-width: 380px;
+}
+.toast-success { background: #F0FDF4; border-left: 4px solid var(--success); color: #166534; }
+.toast-error   { background: #FFF1F2; border-left: 4px solid var(--error);   color: #9F1239; }
+.toast-info    { background: #EFF6FF; border-left: 4px solid #3B82F6;         color: #1E40AF; }
+.toast-icon    { width: 20px; height: 20px; flex-shrink: 0; }
+
+
+/* ──────────────────────────────────────────────────────────
+   14. LOADING SKELETONS
+────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+.skeleton-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(203,213,225,0.6);
+  overflow: hidden;
+  padding: 22px;
+}
+.skeleton-line { height: 14px; margin-bottom: 10px; }
+.skeleton-line.sm { width: 60%; }
+.skeleton-line.md { width: 80%; }
+.skeleton-line.full { width: 100%; }
+.skeleton-rect { height: 80px; border-radius: var(--radius-sm); }
+
+
+/* ──────────────────────────────────────────────────────────
+   15. ANIMATIONS
+────────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   16. RESPONSIVE
+────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .listings-grid { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
+  .hero-stats { display: none; }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 0 20px; }
+  .navbar-title { font-size: 1rem; }
+  .page-hero { padding: 36px 20px 40px; }
+  .filter-bar { padding: 12px 20px; top: 56px; }
+  .listings-section { padding: 24px 20px 48px; }
+  .listings-grid { grid-template-columns: 1fr; gap: 16px; }
+  .field-row { grid-template-columns: 1fr; }
+  .field-row.triple { grid-template-columns: 1fr 1fr; }
+  .add-listing-page { padding: 24px 16px 60px; }
+  .form-section { padding: 22px 18px; }
+  .form-submit-bar { flex-direction: column; }
+  .btn-submit, .btn-cancel { width: 100%; justify-content: center; }
+  .modal { padding: 24px 18px; }
+}
+
+@media (max-width: 480px) {
+  .hero-text h1 { font-size: 1.6rem; }
+  .amenities-grid { grid-template-columns: 1fr 1fr; }
+  .field-row.triple { grid-template-columns: 1fr; }
+  .toast-container { bottom: 16px; right: 16px; left: 16px; }
+  .toast { max-width: 100%; }
+  .navbar-links .nav-link { display: none; }
+
+  /* Card footer — stack actions tighter on small screens */
+  .card-footer { padding: 12px 14px 14px; gap: 8px; }
+  .card-btn    { font-size: 0.72rem; height: 30px; padding: 0 9px; }
+  .card-contact-row { padding: 6px 8px; }
+  .contact-privacy-text { font-size: 0.72rem; }
+}
+
+
+/* ============================================================
+   SECTION: ROOM IMAGE UPLOAD (Added in v3.0)
+   ─────────────────────────────────────────────────────────
+   Covers:
+   A. Upload drop-zone in add-listing.html
+   B. Image preview before submission
+   C. Card image thumbnail in listings.html
+   D. Listing detail / expanded view image
+============================================================ */
+
+
+/* ──────────────────────────────────────────────────────────
+   A. IMAGE UPLOAD DROP-ZONE (add-listing.html)
+   ─────────────────────────────────────────────
+   The upload area looks like a dashed rectangle.
+   When the user hovers or drags a file over it, it lights up.
+   When an image is chosen, a preview replaces the placeholder icon.
+────────────────────────────────────────────────────────── */
+
+/* Outer wrapper of the upload section */
+.upload-zone-wrapper {
+  width: 100%;
+}
+
+/* The actual dashed drop-zone box */
+.upload-zone {
+  position:      relative;
+  width:         100%;
+  min-height:    200px;
+  border:        2px dashed var(--input-border);
+  border-radius: var(--radius-md);
+  background:    var(--input-bg);
+  display:       flex;
+  flex-direction: column;
+  align-items:   center;
+  justify-content: center;
+  gap:           12px;
+  cursor:        pointer;
+  transition:    border-color 0.25s, background 0.25s, box-shadow 0.25s;
+  overflow:      hidden; /* keeps the preview image clipped inside */
+  padding:       32px 24px;
+}
+
+/* Hover state — user hovers mouse over the zone */
+.upload-zone:hover {
+  border-color: var(--teal);
+  background:   rgba(19, 196, 163, 0.04);
+}
+
+/* Drag-over state — user is dragging a file over the zone */
+/* Added by JavaScript when dragover event fires */
+.upload-zone.drag-over {
+  border-color: var(--teal);
+  background:   rgba(19, 196, 163, 0.08);
+  box-shadow:   0 0 0 4px rgba(19, 196, 163, 0.15);
+}
+
+/* Has-image state — a preview image is shown */
+/* JavaScript adds this class when user picks a file */
+.upload-zone.has-image {
+  border-style:  solid;
+  border-color:  var(--teal);
+  background:    #000; /* black behind the image for letterboxing */
+  padding:       0;
+  min-height:    240px;
+}
+
+/* The hidden real <input type="file"> */
+/* We hide it and trigger it from the styled zone */
+.upload-input {
+  position: absolute;
+  inset:    0;           /* stretches to fill the entire zone */
+  opacity:  0;           /* invisible but clickable */
+  cursor:   pointer;
+  width:    100%;
+  height:   100%;
+  z-index:  2;           /* on top so clicks register on it */
+}
+
+/* Upload icon (camera SVG) */
+.upload-icon {
+  width:  52px;
+  height: 52px;
+  color:  var(--text-light);
+  transition: color 0.2s, transform 0.2s;
+}
+.upload-zone:hover .upload-icon {
+  color:     var(--teal);
+  transform: scale(1.08);
+}
+
+/* "Click to upload" text */
+.upload-label-text {
+  text-align:  center;
+  pointer-events: none; /* let clicks pass through to the input */
+}
+.upload-label-text strong {
+  display:     block;
+  font-size:   0.95rem;
+  font-weight: 700;
+  color:       var(--text-dark);
+  margin-bottom: 4px;
+}
+.upload-label-text span {
+  font-size:   0.82rem;
+  color:       var(--text-light);
+}
+
+/* "or drag and drop" text below */
+.upload-hint {
+  font-size:   0.78rem;
+  color:       var(--text-light);
+  text-align:  center;
+}
+
+/* ── IMAGE PREVIEW ──
+   When the user picks an image, we show it inside the zone.
+   The <img> is hidden by default; JS makes it visible. */
+.upload-preview-img {
+  position:   absolute;
+  inset:      0;
+  width:      100%;
+  height:     100%;
+  object-fit: cover;    /* fill the box, cropping if needed */
+  z-index:    1;        /* above background, below the input */
+  display:    none;     /* hidden until image is selected */
+  border-radius: calc(var(--radius-md) - 2px);
+}
+
+/* Show the preview when the zone has an image */
+.upload-zone.has-image .upload-preview-img {
+  display: block;
+}
+
+/* Hide the placeholder icon/text when preview is showing */
+.upload-zone.has-image .upload-icon,
+.upload-zone.has-image .upload-label-text,
+.upload-zone.has-image .upload-hint {
+  display: none;
+}
+
+/* ── REMOVE IMAGE BUTTON ──
+   Appears in the top-right corner of the preview.
+   Lets the user clear their selection. */
+.upload-remove-btn {
+  position:      absolute;
+  top:           10px;
+  right:         10px;
+  z-index:       3; /* above the file input */
+  width:         32px;
+  height:        32px;
+  border-radius: 50%;
+  background:    rgba(0, 0, 0, 0.65);
+  color:         #fff;
+  display:       none; /* hidden until image selected */
+  place-items:   center;
+  cursor:        pointer;
+  border:        none;
+  font-size:     1.1rem;
+  line-height:   1;
+  transition:    background 0.2s, transform 0.15s;
+  backdrop-filter: blur(4px);
+}
+.upload-remove-btn:hover {
+  background: rgba(239, 68, 68, 0.85);
+  transform:  scale(1.1);
+}
+/* Show when zone has image */
+.upload-zone.has-image .upload-remove-btn {
+  display: grid;
+}
+
+/* ── FILE SIZE / NAME INFO BAR ──
+   Shown below the upload zone after a file is chosen. */
+.upload-file-info {
+  display:         flex;
+  align-items:     center;
+  gap:             10px;
+  padding:         10px 14px;
+  background:      var(--white);
+  border:          1px solid var(--input-border);
+  border-radius:   var(--radius-sm);
+  margin-top:      10px;
+  font-size:       0.82rem;
+  color:           var(--text-mid);
+  display:         none; /* shown by JS after file selected */
+}
+.upload-file-info.visible { display: flex; }
+.upload-file-info .file-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.upload-file-info .file-name {
+  flex: 1;
+  font-weight: 600;
+  color:       var(--text-dark);
+  white-space: nowrap;
+  overflow:    hidden;
+  text-overflow: ellipsis;
+}
+.upload-file-info .file-size {
+  flex-shrink: 0;
+  color:       var(--text-light);
+}
+
+/* ── UPLOAD PROGRESS BAR (shown during API call) ── */
+.upload-progress {
+  width:      100%;
+  height:     4px;
+  background: var(--input-border);
+  border-radius: 99px;
+  margin-top: 8px;
+  overflow:   hidden;
+  display:    none; /* shown by JS during upload */
+}
+.upload-progress.visible { display: block; }
+.upload-progress-fill {
+  height:           100%;
+  background:       linear-gradient(90deg, var(--navy-mid), var(--teal));
+  border-radius:    99px;
+  width:            0%;
+  transition:       width 0.3s ease;
+  animation:        progressPulse 1.5s ease-in-out infinite;
+}
+@keyframes progressPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   B. LISTING CARD IMAGE (listings.html — the browse grid)
+   ─────────────────────────────────────────────────────────
+   Each card can optionally show a room photo at the top.
+   If no image: a gradient placeholder is shown instead.
+────────────────────────────────────────────────────────── */
+
+/* Image container at the top of the card */
+.card-image {
+  width:     100%;
+  height:    180px;            /* fixed height for consistent grid layout */
+  overflow:  hidden;
+  position:  relative;
+  flex-shrink: 0;
+  background: linear-gradient(
+    135deg,
+    var(--navy) 0%,
+    var(--navy-mid) 60%,
+    rgba(19, 196, 163, 0.3) 100%
+  ); /* gradient shown while image loads or as fallback */
+}
+
+/* The actual <img> element inside the card */
+.card-image img {
+  width:      100%;
+  height:     100%;
+  object-fit: cover;          /* fill the box without distortion */
+  display:    block;
+  transition: transform 0.4s var(--ease); /* zoom effect on card hover */
+}
+
+/* Zoom in the image slightly when the whole card is hovered */
+.listing-card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+/* ── NO-IMAGE PLACEHOLDER ──
+   Shown inside .card-image when no photo was uploaded */
+.card-img-placeholder {
+  position:        absolute;
+  inset:           0;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  gap:             8px;
+}
+.card-img-placeholder svg {
+  width:   40px;
+  height:  40px;
+  color:   rgba(255, 255, 255, 0.3);
+}
+.card-img-placeholder span {
+  font-size:  0.75rem;
+  font-weight: 600;
+  color:      rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── IMAGE BADGE (overlaid on the card image) ──
+   Shows the room type badge on top of the photo */
+.card-image-badge {
+  position:      absolute;
+  top:           12px;
+  left:          12px;
+  z-index:       2;
+  /* Badge styles inherited from .badge — just positioning here */
+}
+
+/* ── "NEW" ribbon for recently posted listings ── */
+.card-image-new {
+  position:    absolute;
+  top:         12px;
+  right:       12px;
+  z-index:     2;
+  padding:     3px 10px;
+  border-radius: 99px;
+  background:  var(--teal);
+  color:       var(--navy);
+  font-size:   0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   C. LISTING DETAIL MODAL / EXPANDED VIEW
+   ─────────────────────────────────────────────────────────
+   When user clicks "View Details" a full detail overlay shows.
+────────────────────────────────────────────────────────── */
+
+/* Detail overlay — covers the full screen */
+.detail-overlay {
+  position:   fixed;
+  inset:      0;
+  background: rgba(11, 37, 69, 0.75);
+  backdrop-filter: blur(6px);
+  z-index:    300;
+  display:    none;
+  place-items: center;
+  padding:    24px;
+}
+.detail-overlay.open { display: grid; }
+
+/* Detail card — the white panel in the centre */
+.detail-card {
+  background:    var(--white);
+  border-radius: var(--radius-lg);
+  width:         100%;
+  max-width:     760px;
+  max-height:    90vh;
+  overflow-y:    auto;
+  box-shadow:    0 32px 80px rgba(0, 0, 0, 0.35);
+  animation:     slideUp 0.3s var(--ease) both;
+}
+
+/* Full-width image at top of detail card */
+.detail-hero-image {
+  width:       100%;
+  height:      280px;
+  overflow:    hidden;
+  position:    relative;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background:  linear-gradient(135deg, var(--navy), var(--navy-mid));
+  flex-shrink: 0;
+}
+.detail-hero-image img {
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+  display:    block;
+}
+
+/* Gradient overlay at the bottom of the detail image */
+/* Creates a smooth fade from the image into the white content below */
+.detail-hero-image::after {
+  content:    '';
+  position:   absolute;
+  bottom:     0;
+  left:       0;
+  right:      0;
+  height:     80px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.15));
+  pointer-events: none;
+}
+
+/* Close button on detail modal */
+.detail-close {
+  position:      absolute;
+  top:           16px;
+  right:         16px;
+  z-index:       10;
+  width:         38px;
+  height:        38px;
+  border-radius: 50%;
+  background:    rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  display:       grid;
+  place-items:   center;
+  cursor:        pointer;
+  border:        none;
+  transition:    background 0.2s, transform 0.15s;
+  box-shadow:    0 2px 12px rgba(0,0,0,0.2);
+}
+.detail-close:hover {
+  background: white;
+  transform:  scale(1.08);
+}
+.detail-close svg {
+  width:  18px;
+  height: 18px;
+  color:  var(--navy);
+}
+
+/* Detail card content area (below the image) */
+.detail-content {
+  padding: 28px 32px 32px;
+}
+
+/* Grid layout for detail info rows */
+.detail-info-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   16px;
+  margin:                20px 0;
+}
+.detail-info-item {
+  display:       flex;
+  flex-direction: column;
+  gap:           4px;
+}
+.detail-info-label {
+  font-size:      0.72rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color:          var(--text-light);
+}
+.detail-info-value {
+  font-size:   0.95rem;
+  font-weight: 600;
+  color:       var(--text-dark);
+}
+
+/* No-image placeholder for detail view */
+.detail-no-image {
+  width:           100%;
+  height:          280px;
+  background:      linear-gradient(135deg, var(--navy), var(--navy-mid));
+  border-radius:   var(--radius-lg) var(--radius-lg) 0 0;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  gap:             12px;
+}
+.detail-no-image svg {
+  width:  56px;
+  height: 56px;
+  color:  rgba(255,255,255,0.2);
+}
+.detail-no-image span {
+  font-size:   0.8rem;
+  color:       rgba(255,255,255,0.3);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   D. RESPONSIVE ADJUSTMENTS FOR IMAGES
+────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .card-image        { height: 160px; }
+  .detail-hero-image { height: 200px; }
+  .detail-content    { padding: 20px 18px 24px; }
+  .detail-info-grid  { grid-template-columns: 1fr; gap: 12px; }
+  .detail-no-image   { height: 200px; }
+}
+
+@media (max-width: 480px) {
+  .card-image        { height: 140px; }
+  .detail-hero-image { height: 160px; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   NEARBY LOCATION FINDER — v4.0 styles
+   These styles cover:
+   A. Add-Listing form: nearby place row input fields
+   B. Listing detail overlay: nearby places display grid
+   C. Listing detail overlay: embedded Google Map
+════════════════════════════════════════════════════════════ */
+
+
+/* ── A. ADD-LISTING FORM: nearby place input rows ───────── */
+
+/* One full row for one nearby place (name + type + distance + × button) */
+.nearby-place-row {
+  margin-bottom: 12px;
+}
+
+/* Flex container: all fields sit side-by-side on desktop */
+.nearby-place-fields {
+  display:        flex;
+  align-items:    flex-end;   /* align to bottom so labels line up */
+  gap:            10px;
+  flex-wrap:      wrap;       /* wraps on small screens */
+}
+
+/* Remove button (×) beside each row */
+.nearby-remove-btn {
+  flex-shrink:     0;
+  width:           36px;
+  height:          40px;
+  border:          1.5px solid #FECDD3;
+  border-radius:   var(--radius-sm);
+  background:      #FFF1F2;
+  color:           #9F1239;
+  font-size:       1.1rem;
+  font-weight:     700;
+  cursor:          pointer;
+  transition:      background 0.2s, border-color 0.2s;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  margin-bottom:   0;          /* aligns with input bottom edge */
+}
+.nearby-remove-btn:hover {
+  background:      #FEE2E2;
+  border-color:    #FCA5A5;
+}
+
+/* "Add another place" button below the rows */
+.btn-add-nearby {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             6px;
+  padding:         9px 18px;
+  margin-top:      8px;
+  background:      transparent;
+  border:          1.5px dashed var(--teal);
+  border-radius:   var(--radius-sm);
+  color:           var(--teal);
+  font-size:       0.875rem;
+  font-weight:     600;
+  cursor:          pointer;
+  transition:      background 0.2s, color 0.2s;
+}
+.btn-add-nearby:hover {
+  background: rgba(0,147,135,0.07);
+}
+
+
+/* ── B. LISTING DETAIL OVERLAY: Nearby places grid ──────── */
+
+/* Section wrapper inside the detail card */
+.nearby-section {
+  margin-top:    24px;
+  margin-bottom: 20px;
+}
+
+/* Section heading */
+.nearby-section-title {
+  font-size:       0.78rem;
+  text-transform:  uppercase;
+  letter-spacing:  0.8px;
+  color:           var(--text-light);
+  font-weight:     700;
+  margin-bottom:   14px;
+}
+
+/* Grid: 2 columns on desktop, 1 on mobile */
+.nearby-grid {
+  display:               grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:                   10px;
+}
+@media (max-width: 540px) {
+  .nearby-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* One nearby place card */
+.nearby-card {
+  display:       flex;
+  align-items:   center;
+  gap:           12px;
+  padding:       12px 14px;
+  background:    var(--input-bg);
+  border:        1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  transition:    border-color 0.2s, transform 0.15s;
+}
+.nearby-card:hover {
+  border-color: var(--teal);
+  transform:    translateY(-1px);
+}
+
+/* Icon circle */
+.nearby-icon {
+  flex-shrink:     0;
+  width:           40px;
+  height:          40px;
+  border-radius:   50%;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-size:       1.2rem;
+  /* Each type gets its own color — set via inline style in JS */
+}
+
+/* Text container */
+.nearby-info {
+  min-width: 0; /* allows text-overflow: ellipsis to work */
+}
+.nearby-name {
+  font-size:     0.88rem;
+  font-weight:   600;
+  color:         var(--navy);
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+.nearby-meta {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  margin-top:  3px;
+}
+.nearby-type-badge {
+  font-size:       0.7rem;
+  font-weight:     700;
+  text-transform:  uppercase;
+  letter-spacing:  0.5px;
+  padding:         2px 7px;
+  border-radius:   20px;
+  /* Color set per type in JS */
+}
+.nearby-distance {
+  font-size:  0.78rem;
+  color:      var(--text-light);
+  font-weight: 500;
+}
+
+
+/* ── C. LISTING DETAIL OVERLAY: Google Map section ──────── */
+
+/* Map container wrapper */
+.map-section {
+  margin-top:    24px;
+  margin-bottom: 8px;
+}
+
+/* Section heading */
+.map-section-title {
+  font-size:       0.78rem;
+  text-transform:  uppercase;
+  letter-spacing:  0.8px;
+  color:           var(--text-light);
+  font-weight:     700;
+  margin-bottom:   12px;
+}
+
+/* The <iframe> that shows the embedded Google Map */
+.map-embed-frame {
+  width:         100%;
+  height:        280px;
+  border:        0;
+  border-radius: var(--radius-sm);
+  display:       block;
+}
+@media (max-width: 540px) {
+  .map-embed-frame {
+    height: 220px;
+  }
+}

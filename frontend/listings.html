@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Listings – FindMate</title>
+
+  <!-- Google Fonts (same as existing pages) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Shared design tokens + global navbar styles -->
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/global.css" />
+  <!-- Listings-specific styles -->
+  <link rel="stylesheet" href="./css/listings.css" />
+  <!-- Reviews & Ratings styles (NEW v4.0) -->
+  <link rel="stylesheet" href="./css/reviews.css" />
+  <!-- Report & Safety System (v7.0) -->
+  <link rel="stylesheet" href="./css/report.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+        NAVBAR — master design (reference page)
+        Active page: Browse
+  ══════════════════════════════════════════ -->
+  <nav class="navbar" id="mainNavbar">
+    <!-- Brand / Logo -->
+    <a href="./home.html" class="navbar-brand">
+      <div class="navbar-logo">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M20 4L36 18V38H26V28H14V38H4V18L20 4Z" fill="rgba(255,255,255,0.95)" />
+          <rect x="16" y="22" width="8" height="6" rx="1" fill="#0B2545" />
+        </svg>
+      </div>
+      <span class="navbar-title">FindMate</span>
+    </a>
+
+    <!-- Hamburger button (mobile only — shown via CSS at ≤768px) -->
+    <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <!-- Nav Links -->
+    <div class="navbar-links" id="navLinks">
+      <a href="./home.html"   class="nav-link">Home</a>
+      <a href="./listings.html"    class="nav-link active">Browse</a>
+      <a href="./matchings.html"   class="nav-link">My Matches ✨</a>
+      <a href="./chat.html"        class="nav-link">Chat 💬</a>
+      <a href="./profile.html"     class="nav-link">Profile</a>
+      <a href="./help.html"         class="nav-link">Help ❓</a>
+
+      <div class="nav-mobile-divider"></div>
+
+      <!-- Shown when NOT logged in -->
+      <a href="./login.html" class="btn-nav-primary" id="navLoginBtn">Sign In</a>
+
+      <!-- Shown when logged in (hidden by default, shown by navbar.js) -->
+      <div class="user-pill" id="navUserPill" style="display:none;">
+        <div class="user-avatar" id="navUserAvatar">?</div>
+        <span id="navUserName">User</span>
+      </div>
+
+      <a href="./add-listing.html" class="btn-nav-primary" id="navAddBtn" style="display:none;">
+        + Post Room
+      </a>
+
+      <!-- Admin Dashboard link (v6.0) - shown by navbar.js only for admin users -->
+      <a href="./admin-home.html" class="nav-admin-link" id="navAdminBtn" style="display:none;">⚙️ Admin</a>
+
+      <button class="btn-logout" id="navLogoutBtn" style="display:none;" onclick="logout()">
+        Sign Out
+      </button>
+    </div>
+  </nav>
+
+  <!-- Dark overlay behind mobile menu drawer -->
+  <div class="nav-overlay" id="navOverlay"></div>
+
+
+  <!-- ══════════════════════════════════════════
+        PAGE HERO
+  ══════════════════════════════════════════ -->
+  <section class="page-hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1>Find Your <em>Perfect</em> Room</h1>
+        <p>Browse verified room listings across top cities. Filter by location, budget, and room type.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num" id="totalCount">—</span>
+          <span class="hero-stat-label">Active Listings</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+        FILTER BAR
+  ══════════════════════════════════════════ -->
+  <div class="filter-bar">
+    <div class="filter-inner">
+
+      <!-- City search -->
+      <div class="filter-search">
+        <svg class="filter-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" id="filterCity" placeholder="Search by city…" />
+      </div>
+
+      <!-- Room type -->
+      <select class="filter-select" id="filterRoomType">
+        <option value="">All Room Types</option>
+        <option value="single">Single Room</option>
+        <option value="shared">Shared Room</option>
+        <option value="entire_flat">Entire Flat</option>
+        <option value="pg">PG</option>
+      </select>
+
+      <!-- Gender preference -->
+      <select class="filter-select" id="filterGender">
+        <option value="">Any Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="any">Any</option>
+      </select>
+
+      <!-- Max rent -->
+      <select class="filter-select" id="filterMaxRent">
+        <option value="">Any Budget</option>
+        <option value="5000">Under ₹5,000</option>
+        <option value="10000">Under ₹10,000</option>
+        <option value="15000">Under ₹15,000</option>
+        <option value="25000">Under ₹25,000</option>
+        <option value="50000">Under ₹50,000</option>
+      </select>
+
+      <!-- Clear button -->
+      <button class="btn-clear-filters" id="btnClearFilters">Clear</button>
+
+      <!-- Results count -->
+      <span class="filter-count" id="filterCount"></span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+        LISTINGS GRID
+  ══════════════════════════════════════════ -->
+  <section class="listings-section">
+    <!-- Cards injected here by listings.js -->
+    <div class="listings-grid" id="listingsGrid">
+
+      <!-- Loading skeletons shown while data is fetching -->
+      <div class="skeleton-card" id="skel1">
+        <div class="skeleton skeleton-line md" style="height:18px;margin-bottom:14px;"></div>
+        <div class="skeleton skeleton-line full"></div>
+        <div class="skeleton skeleton-line sm"></div>
+        <div class="skeleton skeleton-rect" style="margin-top:16px;"></div>
+      </div>
+      <div class="skeleton-card" id="skel2">
+        <div class="skeleton skeleton-line md" style="height:18px;margin-bottom:14px;"></div>
+        <div class="skeleton skeleton-line full"></div>
+        <div class="skeleton skeleton-line sm"></div>
+        <div class="skeleton skeleton-rect" style="margin-top:16px;"></div>
+      </div>
+      <div class="skeleton-card" id="skel3">
+        <div class="skeleton skeleton-line md" style="height:18px;margin-bottom:14px;"></div>
+        <div class="skeleton skeleton-line full"></div>
+        <div class="skeleton skeleton-line sm"></div>
+        <div class="skeleton skeleton-rect" style="margin-top:16px;"></div>
+      </div>
+
+    </div><!-- /#listingsGrid -->
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+        DETAIL OVERLAY (full listing view with large image)
+  ══════════════════════════════════════════ -->
+  <div class="detail-overlay" id="detailOverlay" role="dialog" aria-modal="true">
+    <!-- Content is injected here by openDetail() in listings.js -->
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+        EDIT MODAL (shown when owner clicks Edit)
+  ══════════════════════════════════════════ -->
+  <div class="modal-overlay" id="editModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Edit Listing</h2>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- The edit form is built dynamically by JS so fields are pre-populated -->
+      <form id="editForm" novalidate>
+        <input type="hidden" id="editListingId" />
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="editTitle">Title <span class="req">*</span></label>
+            <input type="text" id="editTitle" class="form-input" placeholder="e.g. Cozy Single Room in Chennai" />
+            <span class="field-error">Title is required (min 5 chars)</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="editCity">City <span class="req">*</span></label>
+            <input type="text" id="editCity" class="form-input" placeholder="e.g. Chennai" />
+            <span class="field-error">City is required</span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="editArea">Area / Locality</label>
+            <input type="text" id="editArea" class="form-input" placeholder="e.g. T. Nagar" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="editRent">Monthly Rent (₹) <span class="req">*</span></label>
+            <div class="input-with-prefix">
+              <span class="input-prefix">₹</span>
+              <input type="number" id="editRent" class="form-input" placeholder="8000" min="0" />
+            </div>
+            <span class="field-error">Rent is required</span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="editRoomType">Room Type <span class="req">*</span></label>
+            <select id="editRoomType" class="form-select">
+              <option value="">Select type</option>
+              <option value="single">Single Room</option>
+              <option value="shared">Shared Room</option>
+              <option value="entire_flat">Entire Flat</option>
+              <option value="pg">PG</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="editGender">Gender Preference</label>
+            <select id="editGender" class="form-select">
+              <option value="any">Any</option>
+              <option value="male">Male Only</option>
+              <option value="female">Female Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="editAvailableFrom">Available From</label>
+            <input type="date" id="editAvailableFrom" class="form-input" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="editContact">Contact Number</label>
+            <input type="tel" id="editContact" class="form-input" placeholder="+91 98765 43210" />
+          </div>
+        </div>
+
+        <div class="field-row full">
+          <div class="field-group">
+            <label class="field-label" for="editDescription">Description <span class="req">*</span></label>
+            <textarea id="editDescription" class="form-textarea" placeholder="Describe the room, building, neighbourhood…"></textarea>
+            <span class="field-error">Description is required (min 20 chars)</span>
+          </div>
+        </div>
+
+        <div class="field-row full" style="margin-top:8px;">
+          <div class="field-group">
+            <label class="field-label">Negotiable Rent?</label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9rem;color:var(--text-mid);">
+              <input type="checkbox" id="editNegotiable" style="width:16px;height:16px;accent-color:var(--teal);" />
+              Yes, rent is negotiable
+            </label>
+          </div>
+        </div>
+
+        <!-- Current image display + option to replace -->
+        <div class="field-row full" style="margin-bottom:0;">
+          <div class="field-group">
+            <label class="field-label">Room Photo</label>
+
+            <!-- Shows the current saved image (if any) -->
+            <div id="editCurrentImgWrap" style="display:none; margin-bottom:10px;">
+              <p style="font-size:0.78rem; color:var(--text-light); margin-bottom:6px; font-weight:600;">Current photo:</p>
+              <img
+                id="editCurrentImg"
+                src=""
+                alt="Current room photo"
+                style="width:100%; max-height:180px; object-fit:cover; border-radius:var(--radius-sm); border:1px solid var(--input-border);"
+              />
+            </div>
+
+            <!-- New image preview (shown after user picks a new file) -->
+            <div id="editImgPreviewWrap" style="display:none; margin-bottom:10px;">
+              <p style="font-size:0.78rem; color:var(--teal); margin-bottom:6px; font-weight:600;">New photo (will replace current):</p>
+              <img
+                id="editImgPreview"
+                src=""
+                alt="New room photo preview"
+                style="width:100%; max-height:180px; object-fit:cover; border-radius:var(--radius-sm); border:2px solid var(--teal);"
+              />
+            </div>
+
+            <!-- File input for replacing the image -->
+            <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; border:1.5px dashed var(--input-border); border-radius:var(--radius-sm); cursor:pointer; font-size:0.85rem; color:var(--text-mid); background:var(--input-bg); transition:all 0.2s;">
+              <input
+                type="file"
+                id="editImageInput"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                style="display:none;"
+              />
+              📷 <span>Click to replace photo (optional — JPG, PNG, WebP max 5MB)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-submit-bar" style="margin-top:24px;">
+          <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn-submit" id="editSubmitBtn">
+            <svg class="spinner" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"
+                stroke-dasharray="31.416" stroke-dashoffset="10" stroke-linecap="round"/>
+            </svg>
+            <span class="btn-text">Save Changes</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+        TOAST NOTIFICATIONS
+  ══════════════════════════════════════════ -->
+  <div class="toast-container" id="toastContainer"></div>
+
+
+  <!-- JS -->
+  <!-- Shared navbar JS (auth state + hamburger) -->
+  <script src="./js/navbar.js"></script>
+  <!-- Report & Safety System (v7.0) — load before page scripts -->
+  <script src="./js/report.js"></script>
+  <!-- Reviews & Ratings system (NEW v4.0) — must load BEFORE listings.js -->
+  <script src="./js/reviews.js"></script>
+  <script src="./js/listings.js"></script>
+</body>
+</html>

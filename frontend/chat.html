@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat – FindMate</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Shared design tokens + global navbar styles -->
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/global.css" />
+  <!-- Chat-specific styles -->
+  <link rel="stylesheet" href="./css/chat.css" />
+  <!-- Report & Safety System (v7.0) -->
+  <link rel="stylesheet" href="./css/report.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+        NAVBAR
+  ══════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════
+        NAVBAR — unified master design
+        Active page: Chat
+  ══════════════════════════════════════════ -->
+  <nav class="navbar" id="mainNavbar">
+    <a href="./home.html" class="navbar-brand">
+      <div class="navbar-logo">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M20 4L36 18V38H26V28H14V38H4V18L20 4Z" fill="rgba(255,255,255,0.95)" />
+          <rect x="16" y="22" width="8" height="6" rx="1" fill="#0B2545" />
+        </svg>
+      </div>
+      <span class="navbar-title">FindMate</span>
+    </a>
+
+    <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="navbar-links" id="navLinks">
+      <a href="./home.html"  class="nav-link">Home</a>
+      <a href="./listings.html"   class="nav-link">Browse</a>
+      <a href="./matchings.html"  class="nav-link">My Matches ✨</a>
+      <a href="./chat.html"       class="nav-link active">Chat 💬</a>
+      <a href="./profile.html"    class="nav-link">Profile</a>
+      <a href="./help.html"       class="nav-link">Help ❓</a>
+
+      <div class="nav-mobile-divider"></div>
+
+      <a href="./login.html" class="btn-nav-primary" id="navLoginBtn">Sign In</a>
+
+      <div class="user-pill" id="navUserPill" style="display:none;">
+        <div class="user-avatar" id="navUserAvatar">?</div>
+        <span id="navUserName">User</span>
+      </div>
+
+      <a href="./add-listing.html" class="btn-nav-primary" id="navAddBtn" style="display:none;">
+        + Post Room
+      </a>
+
+      <!-- Admin Dashboard link (v6.0) - shown by navbar.js only for admin users -->
+      <a href="./admin-home.html" class="nav-admin-link" id="navAdminBtn" style="display:none;">⚙️ Admin</a>
+
+      <button class="btn-logout" id="navLogoutBtn" style="display:none;" onclick="logout()">
+        Sign Out
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <!-- ══════════════════════════════════════════
+        MAIN CHAT LAYOUT
+        Left = sidebar (conversation list)
+        Right = active chat panel
+  ══════════════════════════════════════════ -->
+  <div class="chat-layout">
+
+    <!-- ── LEFT SIDEBAR ──────────────────────────── -->
+    <aside class="chat-sidebar" id="chatSidebar">
+
+      <!-- Sidebar header -->
+      <div class="sidebar-header">
+        <h2>Messages</h2>
+        <!-- + button to start a new chat -->
+        <button class="btn-new-chat" id="btnNewChat" title="Start new conversation">+</button>
+      </div>
+
+      <!-- Search conversations -->
+      <div class="sidebar-search">
+        <input
+          type="text"
+          id="convSearch"
+          placeholder="Search conversations…"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Conversation list — populated by JavaScript -->
+      <div class="conv-list" id="convList">
+        <!-- Loading state -->
+        <div class="conv-empty" id="convLoading">
+          <div style="display:flex;justify-content:center;margin-bottom:.5rem;">
+            <div class="spinner" style="width:24px;height:24px;border-width:3px;"></div>
+          </div>
+          <p>Loading conversations…</p>
+        </div>
+      </div>
+
+    </aside>
+
+
+    <!-- ── RIGHT CHAT PANEL ───────────────────────── -->
+    <main class="chat-main" id="chatMain">
+
+      <!-- Placeholder shown when no chat is selected -->
+      <div class="chat-placeholder" id="chatPlaceholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        <h3>Select a conversation</h3>
+        <p>Choose from your existing chats or start a new one with the + button.</p>
+      </div>
+
+      <!-- Active chat panel (hidden until a conversation is opened) -->
+      <div class="chat-panel" id="chatPanel" style="display:none;">
+
+        <!-- Chat header — shows the other user's name -->
+        <div class="chat-header" id="chatHeader">
+          <!-- Back button (mobile only) -->
+          <button class="btn-back-mobile" id="btnBack" title="Back to conversations">&#8592;</button>
+
+          <div class="chat-header-avatar" id="headerAvatar">?</div>
+
+          <div class="chat-header-info">
+            <div class="chat-header-name" id="headerName">Loading…</div>
+            <div class="chat-header-status" id="headerStatus">
+              <span class="status-dot" id="statusDot"></span>
+              <span id="statusText">FindMate user</span>
+            </div>
+          </div>
+
+          <!-- Report button (top-right of header) -->
+          <div class="chat-header-report" id="chatHeaderReport" style="display:none;">
+            <button class="btn-report-icon" id="chatReportBtn"
+              title="Report this user"
+              onclick="chatReportUser()">
+              🚩
+            </button>
+          </div>
+        </div>
+
+        <!-- Messages scroll area -->
+        <div class="messages-area" id="messagesArea">
+          <!-- Messages are injected here by JavaScript -->
+        </div>
+
+        <!-- Typing indicator (shown when other user is typing) -->
+        <div class="typing-indicator" id="typingIndicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+
+        <!-- Compose bar — type and send messages here -->
+        <div class="compose-bar">
+          <textarea
+            id="composeInput"
+            class="compose-input"
+            placeholder="Type a message…"
+            rows="1"
+            maxlength="2000"
+            autocomplete="off"
+          ></textarea>
+
+          <button class="btn-send" id="btnSend" title="Send message">
+            <!-- Paper plane icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+
+      </div><!-- /#chatPanel -->
+
+    </main><!-- /#chatMain -->
+
+  </div><!-- /.chat-layout -->
+
+
+  <!-- ══════════════════════════════════════════
+        NEW CHAT MODAL
+        Shown when user clicks the + button.
+        Lists all users to start a conversation with.
+  ══════════════════════════════════════════ -->
+  <div class="modal-overlay hidden" id="newChatModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Start New Conversation</h3>
+        <button class="btn-modal-close" id="btnCloseModal" title="Close">&#x2715;</button>
+      </div>
+
+      <div class="modal-search">
+        <input
+          type="text"
+          id="userSearch"
+          placeholder="Search users by name…"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- User list — populated by JavaScript -->
+      <div class="user-list" id="userList">
+        <div class="user-list-empty">Loading users…</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toast notification container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+
+  <!-- ══════════════════════════════════════════
+        SCRIPTS
+        1. Socket.IO client (from CDN)
+        2. Our chat.js logic
+  ══════════════════════════════════════════ -->
+
+  <!--
+    Socket.IO Client Library
+    ─────────────────────────────────────────
+    This script gives us the `io()` function in the browser.
+    It connects to our Socket.IO server at localhost:5000.
+    We load it from the server itself — Socket.IO auto-serves it.
+  -->
+  <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+  <script src="./js/navbar.js"></script>
+  <!-- Report & Safety System (v7.0) -->
+  <script src="./js/report.js"></script>
+  <script src="./js/chat.js"></script>
+
+</body>
+</html>

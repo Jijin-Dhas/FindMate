@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Matches – FindMate</title>
+
+  <!-- Google Fonts (same as other pages) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Shared stylesheet + matchings-specific styles -->
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/global.css" />
+  <link rel="stylesheet" href="./css/matchings.css" />
+  <!-- Report & Safety System (v7.0) -->
+  <link rel="stylesheet" href="./css/report.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+        NAVBAR (same structure as listings.html)
+  ══════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════
+        NAVBAR — unified master design
+        Active page: My Matches
+  ══════════════════════════════════════════ -->
+  <nav class="navbar" id="mainNavbar">
+    <a href="./home.html" class="navbar-brand">
+      <div class="navbar-logo">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M20 4L36 18V38H26V28H14V38H4V18L20 4Z" fill="rgba(255,255,255,0.95)" />
+          <rect x="16" y="22" width="8" height="6" rx="1" fill="#0B2545" />
+        </svg>
+      </div>
+      <span class="navbar-title">FindMate</span>
+    </a>
+
+    <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="navbar-links" id="navLinks">
+      <a href="./home.html"  class="nav-link">Home</a>
+      <a href="./listings.html"   class="nav-link">Browse</a>
+      <a href="./matchings.html"  class="nav-link active">My Matches ✨</a>
+      <a href="./chat.html"       class="nav-link">Chat 💬</a>
+      <a href="./profile.html"    class="nav-link">Profile</a>
+      <a href="./help.html"       class="nav-link">Help ❓</a>
+
+      <div class="nav-mobile-divider"></div>
+
+      <a href="./login.html" class="btn-nav-primary" id="navLoginBtn">Sign In</a>
+
+      <div class="user-pill" id="navUserPill" style="display:none;">
+        <div class="user-avatar" id="navUserAvatar">?</div>
+        <span id="navUserName">User</span>
+      </div>
+
+      <a href="./add-listing.html" class="btn-nav-primary" id="navAddBtn" style="display:none;">
+        + Post Room
+      </a>
+
+      <!-- Admin Dashboard link (v6.0) - shown by navbar.js only for admin users -->
+      <a href="./admin-home.html" class="nav-admin-link" id="navAdminBtn" style="display:none;">⚙️ Admin</a>
+
+      <button class="btn-logout" id="navLogoutBtn" style="display:none;" onclick="logout()">
+        Sign Out
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <!-- ══════════════════════════════════════════
+        PAGE HERO
+  ══════════════════════════════════════════ -->
+  <section class="page-hero match-hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1>Your <em>Smart</em> Matches</h1>
+        <p>
+          Listings ranked by compatibility — city, budget, lifestyle and more.
+          The higher the percentage, the better the fit!
+        </p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num" id="totalMatchCount">—</span>
+          <span class="hero-stat-label">Listings Analysed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+        PROFILE INCOMPLETE WARNING
+        Shown if user hasn't filled their profile
+  ══════════════════════════════════════════ -->
+  <div class="profile-warning" id="profileWarning" style="display:none;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+    <div class="warning-text">
+      <strong>Your profile is incomplete!</strong>
+      Match scores are based on your profile preferences.
+      <a href="./profile.html">Complete your profile →</a> for accurate results.
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+        SORT CONTROLS
+  ══════════════════════════════════════════ -->
+  <div class="sort-controls-bar">
+    <div class="sort-controls-inner">
+      <span class="sort-label">Sort by match:</span>
+      <div class="sort-btn-group">
+        <button class="sort-btn active" data-sort="desc">
+          ↑ Highest First
+        </button>
+        <button class="sort-btn" data-sort="asc">
+          ↓ Lowest First
+        </button>
+      </div>
+
+      <!-- Legend -->
+      <div class="match-legend">
+        <span class="legend-dot" style="background:#16a34a;"></span> Perfect (85%+)
+        <span class="legend-dot" style="background:#22c55e;"></span> Great (70%+)
+        <span class="legend-dot" style="background:#f59e0b;"></span> Fair (40%+)
+        <span class="legend-dot" style="background:#ef4444;"></span> Poor
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+        LISTINGS GRID
+  ══════════════════════════════════════════ -->
+  <main class="matchings-main">
+
+    <!-- Loading state -->
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      <p>Calculating your matches…</p>
+    </div>
+
+    <!-- Empty state (shown when no listings exist) -->
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="empty-icon">🏠</div>
+      <h2>No listings found</h2>
+      <p>No rooms are available right now. Check back soon!</p>
+      <a href="./listings.html" class="btn-browse">Browse All Listings</a>
+    </div>
+
+    <!-- The actual grid of match cards — populated by matchings.js -->
+    <div class="matchings-grid" id="matchingsGrid"></div>
+
+  </main>
+
+
+  <!-- ══════════════════════════════════════════
+        MATCH SCORE INFO SECTION
+        Explains how the algorithm works (transparency)
+  ══════════════════════════════════════════ -->
+  <section class="algo-explainer">
+    <div class="algo-inner">
+      <h2>How your match score is calculated</h2>
+      <p class="algo-subtitle">
+        Each listing is scored out of 100 based on 6 compatibility factors:
+      </p>
+      <div class="algo-factors">
+        <div class="algo-factor">
+          <span class="factor-icon">🏙️</span>
+          <strong>City</strong>
+          <span class="factor-pts">30 pts</span>
+          <p>Same city = highest priority</p>
+        </div>
+        <div class="algo-factor">
+          <span class="factor-icon">💰</span>
+          <strong>Budget</strong>
+          <span class="factor-pts">25 pts</span>
+          <p>Rent within your budget range</p>
+        </div>
+        <div class="algo-factor">
+          <span class="factor-icon">👤</span>
+          <strong>Gender</strong>
+          <span class="factor-pts">20 pts</span>
+          <p>Listing matches your gender preference</p>
+        </div>
+        <div class="algo-factor">
+          <span class="factor-icon">🚬</span>
+          <strong>Smoking</strong>
+          <span class="factor-pts">10 pts</span>
+          <p>Smoking habits are compatible</p>
+        </div>
+        <div class="algo-factor">
+          <span class="factor-icon">🍽️</span>
+          <strong>Food</strong>
+          <span class="factor-pts">8 pts</span>
+          <p>Food preferences align</p>
+        </div>
+        <div class="algo-factor">
+          <span class="factor-icon">💼</span>
+          <strong>Occupation</strong>
+          <span class="factor-pts">7 pts</span>
+          <p>Student or working professional match</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Toast notification container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+
+  <!-- ── Script ────────────────────────────────────────── -->
+  <script src="./js/navbar.js"></script>
+  <!-- Report & Safety System (v7.0) -->
+  <script src="./js/report.js"></script>
+  <script src="./js/matchings.js"></script>
+
+</body>
+</html>

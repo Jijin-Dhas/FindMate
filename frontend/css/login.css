@@ -1,0 +1,593 @@
+/* ============================================================
+   FindMate – Auth Pages Stylesheet  (login.css)
+
+   Shared by login.html AND register.html.
+   Extends style.css — only auth-specific styles here.
+
+   Structure:
+   1.  Form Panel Header
+   2.  Form Card & Header
+   3.  Alert Banners (success / error)
+   4.  Field Groups & Floating Labels
+   5.  Input Icons (left icon + show/hide toggle)
+   6.  Forgot Password Row
+   7.  Submit Button (normal + loading + spinner)
+   8.  Divider  ← fixed "or continue with" alignment
+   9.  Social Buttons
+   10. Terms Row (register)
+   11. Password Strength Bar (register)
+   12. Form Footer
+   13. Animations
+   14. Responsive
+============================================================ */
+
+
+/* ──────────────────────────────────────────────────────────
+   1. FORM PANEL HEADER
+────────────────────────────────────────────────────────── */
+.form-panel-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 40px;
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  flex-shrink: 0;
+}
+
+.link-btn {
+  color: var(--teal);
+  font-weight: 600;
+  transition: color 0.2s var(--ease);
+  text-decoration: none;
+}
+.link-btn:hover { color: var(--teal-dark); }
+
+
+/* ──────────────────────────────────────────────────────────
+   2. FORM PANEL & CARD
+────────────────────────────────────────────────────────── */
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--form-bg);
+  padding: 0;
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 0 40px 40px;
+  animation: fadeSlideUp 0.5s var(--ease) both;
+}
+
+.form-card-header {
+  margin-bottom: 24px;
+}
+
+.form-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.form-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   3. ALERT BANNERS
+────────────────────────────────────────────────────────── */
+.alert {
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+  animation: fadeSlideDown 0.3s var(--ease) both;
+}
+
+.alert.show { display: flex; }
+
+.alert--success {
+  background: #DCFCE7;
+  color: #166534;
+  border: 1px solid #BBF7D0;
+}
+
+.alert--error {
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.alert-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   4. FIELD GROUPS & FLOATING LABELS
+────────────────────────────────────────────────────────── */
+.field-group {
+  margin-bottom: 18px;
+  position: relative;
+}
+
+/* Wrapper: positioning context for icons */
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* The <input> — same height/padding on both pages */
+.input-field {
+  width: 100%;
+  height: 52px;
+  padding: 18px 52px 6px 44px;  /* right 52px = 36px icon + 10px offset + 6px gap */
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  color: var(--text-dark);
+  transition:
+    border-color 0.2s var(--ease),
+    box-shadow   0.2s var(--ease),
+    background   0.2s var(--ease);
+  outline: none;
+}
+
+/* Floating label */
+.float-label {
+  position: absolute;
+  left: 44px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.93rem;
+  color: var(--label-color);
+  pointer-events: none;
+  transition: all 0.2s var(--ease);
+  transform-origin: left center;
+  white-space: nowrap;
+}
+
+/* Float up on focus or content */
+.input-field:focus ~ .float-label,
+.input-field:not(:placeholder-shown) ~ .float-label {
+  top: 10px;
+  transform: translateY(0) scale(0.76);
+  color: var(--teal);
+  font-weight: 500;
+}
+
+/* Focus ring */
+.input-field:focus {
+  border-color: var(--teal);
+  background: #fff;
+  box-shadow: var(--shadow-input);
+}
+
+/* Error state */
+.field-group.has-error .input-field,
+.field-group.is-error  .input-field {
+  border-color: var(--error);
+  background: #fff8f8;
+}
+.field-group.has-error .float-label,
+.field-group.is-error  .float-label { color: var(--error); }
+.field-group.has-error .input-field:focus,
+.field-group.is-error  .input-field:focus {
+  box-shadow: 0 2px 8px rgba(239,68,68,0.15);
+}
+
+/* Valid state */
+.field-group.is-valid .input-field { border-color: var(--success); }
+
+/* Inline error */
+.field-error {
+  font-size: 0.78rem;
+  color: var(--error);
+  margin-top: 4px;
+  padding-left: 4px;
+  min-height: 14px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   5. INPUT ICONS
+────────────────────────────────────────────────────────── */
+.input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--label-color);
+  transition: color 0.2s var(--ease);
+}
+
+.input-icon svg { width: 100%; height: 100%; }
+
+/* Left decorative icon */
+.input-icon--left {
+  left: 13px;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Colour left icon on focus */
+.input-wrap:focus-within .input-icon--left { color: var(--teal); }
+
+/* Right show/hide toggle */
+.input-icon--right {
+  left: auto;           /* Reset left: 16px that leaks from style.css .input-icon */
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  pointer-events: auto;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 7px;
+  border-radius: 6px;
+  line-height: 0;       /* prevent button from adding extra inline height */
+  z-index: 2;
+}
+
+.input-icon--right:hover { color: var(--teal); }
+.input-icon--right:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   6. FORGOT PASSWORD ROW
+────────────────────────────────────────────────────────── */
+.forgot-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+  margin-bottom: 22px;
+}
+
+.forgot-link {
+  font-size: 0.84rem;
+  color: var(--text-mid);
+  transition: color 0.2s var(--ease);
+  text-decoration: none;
+}
+.forgot-link:hover { color: var(--teal); }
+
+
+/* ──────────────────────────────────────────────────────────
+   7. SUBMIT BUTTON  (shared: login + register)
+────────────────────────────────────────────────────────── */
+.btn-primary {
+  width: 100%;
+  height: 52px;
+  background: var(--teal);
+  color: var(--navy);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.01em;
+  transition:
+    background   0.2s var(--ease),
+    transform    0.1s var(--ease),
+    box-shadow   0.2s var(--ease);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--teal-dark);
+  box-shadow: 0 4px 20px rgba(19,196,163,0.35);
+  transform: translateY(-1px);
+}
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-label { transition: opacity 0.15s; }
+
+.btn-loading {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary.loading .btn-label   { display: none; }
+.btn-primary.loading .btn-loading { display: flex; }
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   8. DIVIDER  ← properly centred "or continue with"
+────────────────────────────────────────────────────────── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0;                         /* gap handled by padding on text */
+  margin: 26px 0 18px;
+}
+
+.auth-divider__line {
+  flex: 1;
+  height: 1px;
+  background: var(--input-border);
+  display: block;
+}
+
+.auth-divider__text {
+  flex-shrink: 0;
+  padding: 0 14px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   9. SOCIAL BUTTONS  (Google only — full width)
+────────────────────────────────────────────────────────── */
+.social-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 46px;
+  padding: 0 20px;
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease),
+    background   0.2s var(--ease),
+    box-shadow   0.2s var(--ease);
+}
+
+.social-btn svg { flex-shrink: 0; }
+
+.social-btn:hover {
+  border-color: var(--teal);
+  background: #F0FDFB;
+  box-shadow: 0 2px 10px rgba(19,196,163,0.12);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   10. TERMS ROW (register only)
+────────────────────────────────────────────────────────── */
+.terms-row { margin-bottom: 18px; }
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+
+.custom-checkbox {
+  flex-shrink: 0;
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--input-border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+  transition: all 0.2s var(--ease);
+}
+
+.custom-checkbox::after {
+  content: '';
+  width: 4px; height: 8px;
+  border-right: 2px solid var(--white);
+  border-bottom: 2px solid var(--white);
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.15s var(--ease);
+  margin-top: -2px;
+}
+
+.checkbox-label input:checked ~ .custom-checkbox {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+.checkbox-label input:checked ~ .custom-checkbox::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.checkbox-text {
+  font-size: 0.83rem;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+
+.terms-link {
+  color: var(--navy-mid);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.terms-link:hover { border-color: var(--navy-mid); }
+
+
+/* ──────────────────────────────────────────────────────────
+   11. PASSWORD STRENGTH BAR (register only)
+────────────────────────────────────────────────────────── */
+.strength-bar-wrapper {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.strength-bar-wrapper.visible { display: flex; }
+
+.strength-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--input-bg);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  transition: width 0.4s var(--ease), background 0.4s;
+}
+
+.strength-fill[data-strength="1"] { width: 25%; background: var(--strength-weak);   }
+.strength-fill[data-strength="2"] { width: 50%; background: var(--strength-fair);   }
+.strength-fill[data-strength="3"] { width: 75%; background: var(--strength-good);   }
+.strength-fill[data-strength="4"] { width: 100%; background: var(--strength-strong); }
+
+.strength-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 48px;
+  text-align: right;
+  transition: color 0.3s;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   12. FORM FOOTER
+────────────────────────────────────────────────────────── */
+.form-footer {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  padding: 16px 40px 28px;
+  flex-shrink: 0;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   13. STAT LOADING PLACEHOLDER
+────────────────────────────────────────────────────────── */
+.stat-loading {
+  opacity: 0.4;
+  font-size: 1rem;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.9; }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   14. ANIMATIONS
+────────────────────────────────────────────────────────── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   15. RESPONSIVE
+────────────────────────────────────────────────────────── */
+
+/* Tablet: hide brand panel, form takes full width */
+@media (max-width: 900px) {
+  .page-wrapper { grid-template-columns: 1fr; }
+  .brand-panel  { display: none; }
+  .form-panel   {
+    min-height: 100vh;
+    justify-content: flex-start;
+    padding-top: 12px;
+  }
+  .form-panel-header { padding: 20px 24px; }
+  .form-card         { padding: 0 24px 36px; max-width: 100%; }
+  .form-footer       { padding: 12px 24px 24px; }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .form-title        { font-size: 1.45rem; }
+  .form-card         { padding: 0 16px 32px; }
+  .form-panel-header { padding: 16px; }
+  .form-footer       { padding: 10px 16px 20px; }
+  .input-field       { height: 50px; font-size: 0.92rem; padding-right: 52px; }
+  .btn-primary       { height: 50px; }
+}

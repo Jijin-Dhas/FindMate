@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help & Support – FindMate</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Help & Support page styles -->
+  <link rel="stylesheet" href="./css/help.css" />
+  <link rel="stylesheet" href="./css/global.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+        NAVBAR
+  ══════════════════════════════════════════ -->
+  <nav class="navbar" id="mainNavbar">
+    <a href="./home.html" class="navbar-brand">
+      <div class="navbar-logo">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M20 4L36 18V38H26V28H14V38H4V18L20 4Z" fill="rgba(255,255,255,0.95)" />
+          <rect x="16" y="22" width="8" height="6" rx="1" fill="#0B2545" />
+        </svg>
+      </div>
+      <span class="navbar-title">FindMate</span>
+    </a>
+
+    <!-- Hamburger (mobile) -->
+    <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="navbar-links" id="navLinks">
+      <a href="./home.html" class="nav-link">Home</a>
+      <a href="./listings.html"  class="nav-link">Browse</a>
+      <a href="./matchings.html" class="nav-link">My Matches ✨</a>
+      <a href="./chat.html"      class="nav-link">Chat 💬</a>
+      <a href="./profile.html"   class="nav-link">Profile</a>
+      <a href="./help.html"      class="nav-link active">Help</a>
+
+      <div class="nav-mobile-divider"></div>
+
+      <a href="./login.html" class="btn-nav-primary" id="navLoginBtn">Sign In</a>
+
+      <div class="user-pill" id="navUserPill" style="display:none;">
+        <div class="user-avatar" id="navUserAvatar">?</div>
+        <span id="navUserName">User</span>
+      </div>
+
+      <a href="./add-listing.html" class="btn-nav-primary" id="navAddBtn" style="display:none;">
+        + Post Room
+      </a>
+
+      <!-- Admin Dashboard link (v6.0) - shown by navbar.js only for admin users -->
+      <a href="./admin-home.html" class="nav-admin-link" id="navAdminBtn" style="display:none;">⚙️ Admin</a>
+
+      <button class="btn-logout" id="navLogoutBtn" style="display:none;" onclick="logout()">
+        Sign Out
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav-overlay" id="navOverlay"></div>
+
+
+  <!-- ══════════════════════════════════════════
+        HERO
+  ══════════════════════════════════════════ -->
+  <section class="help-hero">
+    <div class="hero-content">
+      <!-- Floating icon above heading -->
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+          <circle cx="12" cy="17" r=".5" fill="currentColor"/>
+        </svg>
+      </div>
+
+      <h1>How can we <em>help</em> you?</h1>
+      <p>
+        Find answers to common questions, or send us a message and
+        our support team will get back to you within 24 hours.
+      </p>
+
+      <!-- Search box — filters FAQ items in real-time via JS -->
+      <div class="hero-search" role="search">
+        <input
+          type="search"
+          id="faqSearch"
+          placeholder="Search for answers… e.g. 'reset password'"
+          aria-label="Search frequently asked questions"
+          autocomplete="off"
+        />
+        <button class="hero-search-btn" onclick="searchFAQ()">Search</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+        QUICK-HELP CARDS
+        Six clickable cards, each scrolls to / filters an FAQ category
+  ══════════════════════════════════════════ -->
+  <div class="quick-help" aria-label="Help categories">
+    <div class="quick-help-grid">
+
+      <a class="quick-card" href="#faq-section" onclick="filterFAQ('account')" title="Account & Login">
+        <div class="quick-card-icon bg-blue">🔐</div>
+        <div class="quick-card-label">Account & Login</div>
+        <div class="quick-card-desc">Password, profile, settings</div>
+      </a>
+
+      <a class="quick-card" href="#faq-section" onclick="filterFAQ('listing')" title="Room Listings">
+        <div class="quick-card-icon bg-teal">🏠</div>
+        <div class="quick-card-label">Room Listings</div>
+        <div class="quick-card-desc">Post, edit, delete listings</div>
+      </a>
+
+      <a class="quick-card" href="#faq-section" onclick="filterFAQ('roommate')" title="Roommate Matching">
+        <div class="quick-card-icon bg-amber">🤝</div>
+        <div class="quick-card-label">Roommate Matching</div>
+        <div class="quick-card-desc">How matching works</div>
+      </a>
+
+      <a class="quick-card" href="#faq-section" onclick="filterFAQ('safety')" title="Safety & Privacy">
+        <div class="quick-card-icon bg-red">🛡️</div>
+        <div class="quick-card-label">Safety & Privacy</div>
+        <div class="quick-card-desc">Report scams, protect data</div>
+      </a>
+
+      <a class="quick-card" href="#faq-section" onclick="filterFAQ('chat')" title="Chat & Messaging">
+        <div class="quick-card-icon bg-purple">💬</div>
+        <div class="quick-card-label">Chat & Messaging</div>
+        <div class="quick-card-desc">Conversations, notifications</div>
+      </a>
+
+      <a class="quick-card" href="#faq-section" onclick="filterFAQ('technical')" title="Technical Issues">
+        <div class="quick-card-icon bg-green">⚙️</div>
+        <div class="quick-card-label">Technical Issues</div>
+        <div class="quick-card-desc">Bugs, errors, loading issues</div>
+      </a>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+        MAIN CONTENT — FAQ + Contact Form
+  ══════════════════════════════════════════ -->
+  <main class="help-main" id="faq-section">
+
+    <!-- ── LEFT: FAQ Accordion ── -->
+    <div class="faq-col">
+      <h2 class="section-heading">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="var(--teal)"/>
+        </svg>
+        Frequently Asked Questions
+      </h2>
+      <p class="section-heading-sub">Browse by category or search above</p>
+
+      <!-- Category filter tabs -->
+      <div class="faq-tabs" id="faqTabs" role="tablist">
+        <button class="faq-tab active" data-cat="all"      onclick="filterFAQ('all')">All</button>
+        <button class="faq-tab"        data-cat="account"  onclick="filterFAQ('account')">🔐 Account</button>
+        <button class="faq-tab"        data-cat="listing"  onclick="filterFAQ('listing')">🏠 Listings</button>
+        <button class="faq-tab"        data-cat="roommate" onclick="filterFAQ('roommate')">🤝 Matching</button>
+        <button class="faq-tab"        data-cat="safety"   onclick="filterFAQ('safety')">🛡️ Safety</button>
+        <button class="faq-tab"        data-cat="chat"     onclick="filterFAQ('chat')">💬 Chat</button>
+        <button class="faq-tab"        data-cat="technical" onclick="filterFAQ('technical')">⚙️ Technical</button>
+      </div>
+
+      <!-- FAQ items — rendered by help.js into this container -->
+      <div class="faq-list" id="faqList" role="list">
+        <!-- JavaScript populates this from the FAQ_DATA array in help.js -->
+      </div>
+    </div><!-- /.faq-col -->
+
+
+    <!-- ── RIGHT: Contact Form ── -->
+    <div class="contact-panel">
+
+      <!-- ─ Contact Card ─ -->
+      <div class="contact-card">
+
+        <!-- Card header (dark navy) -->
+        <div class="contact-card-header">
+          <div class="contact-header-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+          </div>
+          <div class="contact-card-title">Contact Support</div>
+          <div class="contact-card-subtitle">
+            Can't find your answer? Our team replies within 24 hours.
+          </div>
+        </div>
+
+        <!-- ── SUCCESS STATE (hidden until form submitted) ── -->
+        <div class="success-state" id="successState">
+          <div class="success-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h3 class="success-title">Request Received! 🎉</h3>
+          <p class="success-msg">
+            Thank you for reaching out. Our support team will review
+            your request and reply to your email within 24 hours.
+          </p>
+          <div class="ticket-ref" id="ticketRef">
+            🎫 Ticket ID: <span id="ticketIdDisplay">—</span>
+          </div>
+          <button class="btn-submit-another" onclick="resetForm()">
+            Submit Another Request
+          </button>
+        </div>
+
+        <!-- ── THE CONTACT FORM ── -->
+        <div class="contact-form-body" id="formBody">
+
+          <!-- Server-side error banner -->
+          <div class="form-alert error" id="formAlert" role="alert">
+            <span class="form-alert-icon">❌</span>
+            <span id="formAlertMsg">Something went wrong.</span>
+          </div>
+
+          <form id="supportForm" novalidate>
+
+            <!-- Name -->
+            <div class="form-group" id="fg-name">
+              <label class="form-label" for="name">
+                Full Name <span class="req">*</span>
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-input"
+                placeholder="e.g. Priya Sharma"
+                autocomplete="name"
+                maxlength="80"
+              />
+              <span class="field-error" id="err-name">⚠ Please enter your name</span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group" id="fg-email">
+              <label class="form-label" for="email">
+                Email Address <span class="req">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="e.g. priya@gmail.com"
+                autocomplete="email"
+              />
+              <span class="field-error" id="err-email">⚠ Please enter a valid email</span>
+            </div>
+
+            <!-- Issue Category -->
+            <div class="form-group" id="fg-category">
+              <label class="form-label" for="category">
+                Issue Category <span class="req">*</span>
+              </label>
+              <select id="category" name="category" class="form-select">
+                <option value="">Select a category…</option>
+                <option value="account">🔐 Account & Login</option>
+                <option value="listing">🏠 Room Listings</option>
+                <option value="roommate">🤝 Roommate Matching</option>
+                <option value="chat">💬 Chat & Messaging</option>
+                <option value="safety">🛡️ Safety & Privacy</option>
+                <option value="technical">⚙️ Technical Issue / Bug</option>
+                <option value="billing">💳 Billing & Payments</option>
+                <option value="other">❓ Other</option>
+              </select>
+              <span class="field-error" id="err-category">⚠ Please select a category</span>
+            </div>
+
+            <!-- Message -->
+            <div class="form-group" id="fg-message">
+              <label class="form-label" for="message">
+                Describe Your Issue <span class="req">*</span>
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                class="form-textarea"
+                placeholder="Please describe your issue in detail. Include any error messages you see, what you were trying to do, and what happened instead…"
+                maxlength="2000"
+              ></textarea>
+              <span class="char-counter" id="charCounter">0 / 2000</span>
+              <span class="field-error" id="err-message">⚠ Please describe your issue (min 20 characters)</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-submit-support" id="submitBtn">
+              <svg class="submit-spinner" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"
+                  stroke-dasharray="31.416" stroke-dashoffset="10" stroke-linecap="round"/>
+              </svg>
+              <span class="submit-btn-text">🚀 Send Support Request</span>
+            </button>
+
+          </form>
+        </div><!-- /#formBody -->
+
+      </div><!-- /.contact-card -->
+
+
+      <!-- ─ Info Cards below the form ─ -->
+      <div class="info-cards">
+
+        <div class="info-card">
+          <div class="info-card-icon" style="background:#EFF6FF;">📧</div>
+          <div>
+            <div class="info-card-title">Email Support</div>
+            <div class="info-card-text">Get a reply within 24 hours on business days.</div>
+            <a href="mailto:support@findmate.app" class="info-card-link">support@findmate.app</a>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon" style="background:rgba(19,196,163,0.1);">⏱️</div>
+          <div>
+            <div class="info-card-title">Response Time</div>
+            <div class="info-card-text">Mon–Fri 9am–6pm IST. Urgent safety issues prioritised.</div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon" style="background:#F0FDF4;">💡</div>
+          <div>
+            <div class="info-card-title">Quick Tip</div>
+            <div class="info-card-text">Include screenshots and your account email to speed up resolution.</div>
+          </div>
+        </div>
+
+      </div><!-- /.info-cards -->
+
+    </div><!-- /.contact-panel -->
+
+  </main><!-- /.help-main -->
+
+
+  <!-- ══════════════════════════════════════════
+        FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="help-footer">
+    <p>
+      © 2025 FindMate · Built with ❤️ for roommate seekers ·
+      <a href="./listings.html">Browse Rooms</a> ·
+      <a href="./help.html">Help & Support</a>
+    </p>
+  </footer>
+
+
+  <!-- JS: navbar first, then help page logic -->
+  <script src="./js/navbar.js"></script>
+  <script src="./js/help.js"></script>
+</body>
+</html>

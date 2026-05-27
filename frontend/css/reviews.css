@@ -1,0 +1,728 @@
+/* ============================================================
+   frontend/css/reviews.css
+   FindMate – Reviews & Ratings Stylesheet  (NEW v4.0)
+
+   Design tokens inherit from listings.css :root variables.
+   This file covers:
+
+   1.  Reviews Section Wrapper
+   2.  Rating Summary Banner (average + star bar)
+   3.  Star Distribution Breakdown Bars
+   4.  Write-a-Review Form
+   5.  Interactive Star Picker
+   6.  Review Cards Grid
+   7.  Individual Review Card
+   8.  Empty State (no reviews yet)
+   9.  Login Prompt (shown to logged-out users)
+   10. Animations & Loading Skeleton
+   11. Responsive
+============================================================ */
+
+
+/* ──────────────────────────────────────────────────────────
+   1. REVIEWS SECTION WRAPPER
+   Sits inside .detail-content, below amenities.
+────────────────────────────────────────────────────────── */
+.reviews-section {
+  /* Top divider separates reviews from listing details */
+  border-top:  2px solid var(--input-border);
+  margin-top:  28px;
+  padding-top: 28px;
+}
+
+/* Section heading row — "Reviews" title + count badge */
+.reviews-heading {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  margin-bottom: 24px;
+}
+
+.reviews-heading h3 {
+  font-family: var(--font-display);
+  font-size:   1.25rem;
+  font-weight: 700;
+  color:       var(--navy);
+  margin:      0;
+}
+
+/* Pill showing total number of reviews */
+.reviews-count-badge {
+  display:       inline-flex;
+  align-items:   center;
+  padding:       3px 12px;
+  border-radius: 99px;
+  background:    rgba(19, 196, 163, 0.12);
+  color:         var(--teal-dark);
+  font-size:     0.8rem;
+  font-weight:   700;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   2. RATING SUMMARY BANNER
+   Big number on the left + stars + text label on the right.
+   Example:
+     ┌─────────────────────────────────────────┐
+     │  4.3  ★★★★☆  Very Good   16 reviews    │
+     └─────────────────────────────────────────┘
+────────────────────────────────────────────────────────── */
+.rating-summary {
+  display:       flex;
+  align-items:   center;
+  gap:           20px;
+  padding:       20px 24px;
+  background:    linear-gradient(135deg,
+                   rgba(11,37,69,0.04) 0%,
+                   rgba(19,196,163,0.06) 100%);
+  border:        1px solid rgba(19,196,163,0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+  flex-wrap:     wrap;
+}
+
+/* The big average number — e.g. "4.3" */
+.rating-big-num {
+  font-family: var(--font-display);
+  font-size:   3.2rem;
+  font-weight: 700;
+  color:       var(--navy);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Middle column: stars + label */
+.rating-summary-mid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Row of display stars (not interactive — just for showing) */
+.stars-display {
+  display: flex;
+  gap:     3px;
+}
+
+/* Single display star SVG */
+.star-display {
+  width:  22px;
+  height: 22px;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+/* Full star (filled) */
+.star-display.full  { color: #F5A623; }  /* amber */
+/* Half star */
+.star-display.half  { color: #F5A623; }
+/* Empty star */
+.star-display.empty { color: var(--input-border); }
+
+/* Text label: "Very Good", "Excellent", etc. */
+.rating-label {
+  font-size:   0.88rem;
+  font-weight: 700;
+  color:       var(--text-mid);
+}
+
+/* Right column: distribution bars */
+.rating-distribution {
+  flex-shrink: 0;
+  display:     flex;
+  flex-direction: column;
+  gap:         5px;
+  min-width:   180px;
+}
+
+/* One row in the distribution: "5 ★  ████████░░  8" */
+.dist-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  font-size:   0.78rem;
+}
+
+.dist-label {
+  color:       var(--text-light);
+  font-weight: 600;
+  width:       28px;
+  text-align:  right;
+  flex-shrink: 0;
+}
+
+.dist-bar-track {
+  flex:        1;
+  height:      6px;
+  background:  var(--input-border);
+  border-radius: 99px;
+  overflow:    hidden;
+}
+
+.dist-bar-fill {
+  height:        100%;
+  background:    linear-gradient(90deg, var(--amber), #FBBF24);
+  border-radius: 99px;
+  transition:    width 0.6s cubic-bezier(0.4,0,0.2,1);
+  /* width is set inline by JS: style="width: 75%" */
+}
+
+.dist-count {
+  color:       var(--text-light);
+  width:       20px;
+  text-align:  left;
+  flex-shrink: 0;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   3. WRITE-A-REVIEW FORM
+   Shown to logged-in users who haven't reviewed yet.
+────────────────────────────────────────────────────────── */
+.review-form-wrapper {
+  background:    var(--white);
+  border:        1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  padding:       24px;
+  margin-bottom: 28px;
+  box-shadow:    0 2px 12px rgba(0,0,0,0.04);
+}
+
+.review-form-title {
+  font-size:     0.95rem;
+  font-weight:   700;
+  color:         var(--navy);
+  margin-bottom: 18px;
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+}
+
+.review-form-title svg {
+  width:  18px;
+  height: 18px;
+  color:  var(--teal);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   4. INTERACTIVE STAR PICKER
+   Five clickable stars for the review form.
+   Hover = preview glow. Click = lock selection.
+────────────────────────────────────────────────────────── */
+
+/* Outer wrapper keeps the stars + label together */
+.star-picker-group {
+  margin-bottom: 18px;
+}
+
+.star-picker-label {
+  font-size:     0.78rem;
+  font-weight:   700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color:         var(--text-light);
+  margin-bottom: 10px;
+  display:       block;
+}
+
+/* The row of five clickable stars */
+.star-picker {
+  display:    flex;
+  gap:        6px;
+  align-items: center;
+}
+
+/* Each star button — no background, just the SVG */
+.star-btn {
+  background:  none;
+  border:      none;
+  padding:     2px;
+  cursor:      pointer;
+  line-height: 0;
+  border-radius: 4px;
+  transition:  transform 0.15s, filter 0.15s;
+}
+
+.star-btn:hover {
+  transform: scale(1.18);
+}
+
+/* The SVG icon inside each button */
+.star-btn svg {
+  width:       32px;
+  height:      32px;
+  transition:  fill 0.15s, color 0.15s;
+  display:     block;
+}
+
+/* Unselected / not-hovered star */
+.star-btn svg.star-empty {
+  color:  var(--input-border);
+  fill:   var(--input-border);
+}
+
+/* Hovered star (set by JS via .hovered class on the picker) */
+/* When a star is hovered, all stars up to it turn amber */
+.star-picker.hovering .star-btn.in-range svg,
+.star-btn.selected svg {
+  color:  #F5A623;
+  fill:   #F5A623;
+  filter: drop-shadow(0 0 4px rgba(245,166,35,0.5));
+}
+
+/* Text showing current selection: "4 – Very Good" */
+.star-picker-hint {
+  margin-left:  12px;
+  font-size:    0.85rem;
+  font-weight:  600;
+  color:        var(--text-mid);
+  min-width:    120px;
+  transition:   color 0.2s;
+}
+
+/* Error state: user tries to submit without selecting a rating */
+.star-picker-group.has-error .star-picker-hint {
+  color: var(--error);
+}
+
+.star-picker-group.has-error::after {
+  content:      "Please select a star rating";
+  display:      block;
+  font-size:    0.76rem;
+  color:        var(--error);
+  margin-top:   6px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   5. COMMENT TEXTAREA
+────────────────────────────────────────────────────────── */
+.review-comment-group {
+  margin-bottom: 18px;
+}
+
+.review-comment-label {
+  font-size:     0.78rem;
+  font-weight:   700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color:         var(--text-light);
+  margin-bottom: 8px;
+  display:       flex;
+  justify-content: space-between;
+  align-items:   center;
+}
+
+.review-comment-count {
+  font-size:   0.72rem;
+  font-weight: 400;
+  color:       var(--text-light);
+}
+
+.review-textarea {
+  width:         100%;
+  padding:       12px 14px;
+  background:    var(--input-bg);
+  border:        1.5px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  font-family:   var(--font-body);
+  font-size:     0.9rem;
+  color:         var(--text-dark);
+  resize:        vertical;
+  min-height:    100px;
+  max-height:    240px;
+  outline:       none;
+  transition:    border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  line-height:   1.6;
+}
+
+.review-textarea:focus {
+  border-color: var(--input-focus);
+  background:   var(--white);
+  box-shadow:   0 0 0 3px rgba(19,196,163,0.12);
+}
+
+.review-textarea.invalid {
+  border-color: var(--error);
+  background:   #FFF5F5;
+}
+
+.review-field-error {
+  font-size:  0.76rem;
+  color:      var(--error);
+  margin-top: 4px;
+  display:    none;
+}
+
+.review-field-error.visible { display: block; }
+
+
+/* ── Submit button ── */
+.review-submit-row {
+  display:         flex;
+  justify-content: flex-end;
+}
+
+.btn-review-submit {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  padding:       11px 28px;
+  background:    linear-gradient(135deg, var(--navy-mid), var(--teal));
+  color:         var(--white);
+  border:        none;
+  border-radius: var(--radius-sm);
+  font-family:   var(--font-body);
+  font-size:     0.9rem;
+  font-weight:   700;
+  cursor:        pointer;
+  transition:    opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow:    0 4px 14px rgba(19,196,163,0.28);
+}
+
+.btn-review-submit:hover:not(:disabled) {
+  opacity:    0.92;
+  transform:  translateY(-1px);
+  box-shadow: 0 6px 20px rgba(19,196,163,0.38);
+}
+
+.btn-review-submit:disabled {
+  opacity: 0.6;
+  cursor:  not-allowed;
+  transform: none;
+}
+
+/* Spinner inside the submit button */
+.btn-review-submit .review-spinner {
+  width:     18px;
+  height:    18px;
+  animation: spin 0.8s linear infinite;
+  display:   none;
+}
+
+.btn-review-submit.loading .review-btn-text   { display: none; }
+.btn-review-submit.loading .review-spinner    { display: block; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   6. LOGIN PROMPT
+   Shown to logged-out users instead of the review form.
+────────────────────────────────────────────────────────── */
+.review-login-prompt {
+  display:       flex;
+  align-items:   center;
+  gap:           14px;
+  padding:       18px 20px;
+  background:    rgba(19,64,116,0.04);
+  border:        1px dashed var(--input-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 28px;
+}
+
+.review-login-prompt p {
+  flex:      1;
+  font-size: 0.9rem;
+  color:     var(--text-mid);
+  line-height: 1.5;
+  margin:    0;
+}
+
+.review-login-prompt a {
+  flex-shrink:   0;
+  padding:       9px 20px;
+  background:    var(--navy);
+  color:         var(--white);
+  border-radius: var(--radius-sm);
+  font-size:     0.85rem;
+  font-weight:   700;
+  text-decoration: none;
+  transition:    background 0.2s;
+}
+
+.review-login-prompt a:hover { background: var(--navy-mid); }
+
+
+/* "Already reviewed" notice */
+.review-already-done {
+  display:       flex;
+  align-items:   center;
+  gap:           10px;
+  padding:       14px 18px;
+  background:    rgba(19,196,163,0.08);
+  border:        1px solid rgba(19,196,163,0.25);
+  border-radius: var(--radius-sm);
+  font-size:     0.875rem;
+  color:         var(--teal-dark);
+  font-weight:   600;
+  margin-bottom: 28px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   7. REVIEW CARDS GRID
+   Stack of review cards — one per reviewer.
+────────────────────────────────────────────────────────── */
+.reviews-list {
+  display:       flex;
+  flex-direction: column;
+  gap:           14px;
+}
+
+/* Single review card */
+.review-card {
+  background:    var(--white);
+  border:        1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  padding:       18px 20px;
+  transition:    box-shadow 0.2s, border-color 0.2s;
+  animation:     fadeInUp 0.35s var(--ease) both;
+  position:      relative;
+}
+
+.review-card:hover {
+  border-color: rgba(19,196,163,0.3);
+  box-shadow:   0 4px 18px rgba(11,37,69,0.08);
+}
+
+/* Card header: avatar + name + date */
+.review-card-header {
+  display:       flex;
+  align-items:   flex-start;
+  gap:           12px;
+  margin-bottom: 12px;
+}
+
+/* Circular avatar with reviewer's initial */
+.reviewer-avatar {
+  width:         38px;
+  height:        38px;
+  border-radius: 50%;
+  background:    linear-gradient(135deg, var(--navy-mid), var(--teal));
+  display:       grid;
+  place-items:   center;
+  font-size:     0.9rem;
+  font-weight:   700;
+  color:         var(--white);
+  flex-shrink:   0;
+  text-transform: uppercase;
+}
+
+.reviewer-meta { flex: 1; }
+
+.reviewer-name {
+  font-size:   0.9rem;
+  font-weight: 700;
+  color:       var(--text-dark);
+  margin-bottom: 3px;
+}
+
+/* Row with stars + date */
+.reviewer-stars-date {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  flex-wrap:   wrap;
+}
+
+/* Small stars for the card (smaller than picker stars) */
+.stars-small {
+  display: flex;
+  gap:     2px;
+}
+
+.star-small {
+  width:  16px;
+  height: 16px;
+}
+
+.star-small.full  { color: #F5A623; fill: #F5A623; }
+.star-small.empty { color: var(--input-border); fill: var(--input-border); }
+
+/* Date text */
+.review-date {
+  font-size:  0.76rem;
+  color:      var(--text-light);
+}
+
+/* The actual review text */
+.review-comment {
+  font-size:   0.875rem;
+  color:       var(--text-mid);
+  line-height: 1.7;
+  margin:      0;
+}
+
+/* Delete button — top-right corner, only visible on own reviews */
+.btn-review-delete {
+  position:      absolute;
+  top:           14px;
+  right:         14px;
+  padding:       5px 10px;
+  border-radius: var(--radius-sm);
+  font-size:     0.76rem;
+  font-weight:   600;
+  color:         var(--error);
+  background:    rgba(239,68,68,0.08);
+  border:        1px solid rgba(239,68,68,0.2);
+  cursor:        pointer;
+  transition:    all 0.18s;
+  opacity:       0;   /* hidden by default */
+}
+
+/* Show delete button when card is hovered */
+.review-card:hover .btn-review-delete { opacity: 1; }
+.btn-review-delete:hover {
+  background: var(--error);
+  color:      var(--white);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   8. EMPTY STATE
+   Shown when a listing has no reviews yet.
+────────────────────────────────────────────────────────── */
+.reviews-empty {
+  text-align:  center;
+  padding:     40px 20px;
+  color:       var(--text-light);
+}
+
+.reviews-empty-icon {
+  font-size:     2.5rem;
+  margin-bottom: 12px;
+  line-height:   1;
+}
+
+.reviews-empty p {
+  font-size:   0.9rem;
+  line-height: 1.6;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   9. LOADING SKELETON FOR REVIEWS
+────────────────────────────────────────────────────────── */
+.review-skeleton {
+  background:    var(--white);
+  border:        1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  padding:       18px 20px;
+  display:       flex;
+  flex-direction: column;
+  gap:           10px;
+}
+
+.skel-row {
+  display:     flex;
+  gap:         12px;
+  align-items: center;
+}
+
+.skel-circle {
+  width:         38px;
+  height:        38px;
+  border-radius: 50%;
+  flex-shrink:   0;
+}
+
+/* Shimmer animation applied to .skeleton class */
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position:  400px 0; }
+}
+
+.skeleton {
+  background:           linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+  background-size:      800px 100%;
+  animation:            shimmer 1.5s infinite;
+  border-radius:        6px;
+}
+
+/* In the review section, we also add average-bar skeleton */
+.rating-summary-skeleton {
+  height:        80px;
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   10. FADE-IN ANIMATION  (used on review cards)
+────────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger children cards */
+.review-card:nth-child(1) { animation-delay: 0ms;   }
+.review-card:nth-child(2) { animation-delay: 60ms;  }
+.review-card:nth-child(3) { animation-delay: 120ms; }
+.review-card:nth-child(4) { animation-delay: 180ms; }
+.review-card:nth-child(5) { animation-delay: 240ms; }
+
+
+/* ──────────────────────────────────────────────────────────
+   11. RESPONSIVE
+────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .rating-summary {
+    flex-direction: column;
+    gap:            16px;
+    padding:        16px 18px;
+    text-align:     center;
+  }
+
+  .rating-big-num   { font-size: 2.6rem; }
+  .rating-summary-mid { align-items: center; }
+  .rating-distribution { min-width: 100%; }
+
+  .star-picker { justify-content: center; }
+  .star-btn svg { width: 28px; height: 28px; }
+
+  .review-form-wrapper { padding: 18px 14px; }
+  .review-card         { padding: 16px 14px; }
+
+  .reviewer-stars-date { flex-direction: column; gap: 4px; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   CARD RATING BADGE
+   Small inline rating shown on listing cards in the grid.
+   Populated by reviews.js after cards are rendered.
+────────────────────────────────────────────────────────── */
+.card-rating-badge {
+  display:     flex;
+  align-items: center;
+  gap:         5px;
+  margin-bottom: 4px;
+}
+
+.card-rating-stars {
+  display:     flex;
+  align-items: center;
+  gap:         1px;
+}
+
+/* Tiny star for the card badge */
+.card-rating-stars svg {
+  width:  13px;
+  height: 13px;
+}
+
+.card-rating-num {
+  font-size:   0.8rem;
+  font-weight: 700;
+  color:       var(--text-dark);
+}
+
+.card-rating-count {
+  font-size: 0.75rem;
+  color:     var(--text-light);
+}
