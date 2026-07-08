@@ -33,6 +33,7 @@ const app = express();
 // ─── SECURITY ─────────────────────────────────────────────
 app.use(
   helmet({
+    contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: "cross-origin" },
   })
 );
@@ -75,6 +76,8 @@ app.use(
     fallthrough: false,
   })
 );
+// Serve frontend files
+app.use(express.static(path.join(__dirname, "../frontend")));
 
 // ─── ROUTES ───────────────────────────────────────────────
 app.use("/api/health",    healthRoutes);
@@ -90,12 +93,7 @@ app.use("/api/reports",   reportRoutes);  // ← USER REPORT SUBMISSION
 app.use("/api/stats",    statsRoutes);   // ← PUBLIC STATS (login/register page)
 
 app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "Welcome to FindMate API 🏠",
-    version: "6.0.0",
-    docs:    "/api/health",
-  });
+  res.sendFile(path.join(__dirname, "../frontend/home.html"));
 });
 
 // ─── ERROR HANDLING (must be LAST) ────────────────────────

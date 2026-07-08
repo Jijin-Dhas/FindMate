@@ -50,12 +50,12 @@ import {
 // ─────────────────────────────────────────────────────────────
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyB_pigqiWsfAZt4DSijc1PSaEtjtTHANl4',
-  authDomain: 'findmate-20d12.firebaseapp.com',
-  projectId: 'findmate-20d12',
-  storageBucket: 'findmate-20d12.firebasestorage.app',
-  messagingSenderId: '905632272606',
-  appId: '1:905632272606:web:267ea8c08e9fbaf433324f'
+  apiKey: '...',
+  authDomain: '...',
+  projectId: '...',
+  storageBucket: '....',
+  messagingSenderId: '...',
+  appId: '...'
 };
 
 
