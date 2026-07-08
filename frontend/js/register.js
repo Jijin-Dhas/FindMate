@@ -18,7 +18,7 @@
 // ─────────────────────────────────────────────────────────────
 
 // The backend API base URL — change this if your server runs elsewhere
-const API_BASE_URL = "http://localhost:5000/api/auth/register";
+const API_BASE_URL = window.APP_CONFIG.API_BASE + "/api/auth/register";
 
 
 // ─────────────────────────────────────────────────────────────

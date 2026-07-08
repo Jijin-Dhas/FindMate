@@ -28,7 +28,7 @@
 // ─────────────────────────────────────────────────────────
 //  CONFIG — must match the backend server URL
 // ─────────────────────────────────────────────────────────
-const REVIEWS_API = "http://localhost:5000/api/reviews";
+const REVIEWS_API = window.APP_CONFIG.API_BASE + "/api/reviews";
 
 
 // ─────────────────────────────────────────────────────────

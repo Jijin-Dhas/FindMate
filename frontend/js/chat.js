@@ -20,8 +20,8 @@
 // ─────────────────────────────────────────────────────────
 //  CONFIG
 // ─────────────────────────────────────────────────────────
-const API_BASE    = "http://localhost:5000/api";
-const SOCKET_URL  = "http://localhost:5000"; // Socket.IO server URL
+const API_BASE    = window.APP_CONFIG.API_BASE + "/api";
+const SOCKET_URL  = window.APP_CONFIG.SOCKET_URL; // Socket.IO server URL
 
 
 // ─────────────────────────────────────────────────────────

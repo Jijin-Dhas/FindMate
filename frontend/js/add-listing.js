@@ -32,7 +32,7 @@
 // ─────────────────────────────────────────────────────────
 //  CONFIG
 // ─────────────────────────────────────────────────────────
-const API_BASE    = window.APP_CONFIG.API_BASE;
+const API_BASE    = c;
 const SERVER_BASE = window.APP_CONFIG.SERVER_BASE; // for building image URLs
 
 
