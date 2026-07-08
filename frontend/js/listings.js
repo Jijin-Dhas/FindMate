@@ -8,8 +8,8 @@
 //  ✅ detail-card  — gets data-listing-id attr for delete reload
 // ═══════════════════════════════════════════════════════════
 
-const API_BASE    = "http://localhost:5000/api";
-const SERVER_BASE = "http://localhost:5000"; // base URL for image paths
+const API_BASE    = window.APP_CONFIG.API_BASE;
+const SERVER_BASE = window.APP_CONFIG.SERVER_BASE; // base URL for image paths
 
 // ─────────────────────────────────────────────────────────
 //  AUTH STATE

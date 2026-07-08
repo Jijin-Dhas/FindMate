@@ -21,7 +21,7 @@
 // ─────────────────────────────────────────────────────────
 //  CONFIG
 // ─────────────────────────────────────────────────────────
-const REPORT_API_BASE = "http://localhost:5000/api";
+const REPORT_API_BASE = window.APP_CONFIG.API_BASE;
 const REPORT_TOKEN_KEY = "findmate_token";
 
 // ─────────────────────────────────────────────────────────

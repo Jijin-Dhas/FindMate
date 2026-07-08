@@ -1,6 +1,6 @@
 
-  const API   = "http://localhost:5000/api";
-  const IMG   = "http://localhost:5000";
+  const API   = window.APP_CONFIG.API_BASE;
+  const IMG   = window.APP_CONFIG.SERVER_BASE;
   const TOKEN = localStorage.getItem("findmate_token");
 
   /* ── Auth guard ─────────────────────────────────────── */

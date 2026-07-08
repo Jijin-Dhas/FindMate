@@ -17,7 +17,7 @@
 "use strict";
 
 // ─── CONFIGURATION ──────────────────────────────────────────
-const API_BASE  = "http://localhost:5000/api";
+const API_BASE  = window.APP_CONFIG.API_BASE;
 const TOKEN_KEY = "findmate_token";
 const USER_KEY  = "findmate_user";
 

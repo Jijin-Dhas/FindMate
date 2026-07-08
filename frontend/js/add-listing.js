@@ -32,8 +32,8 @@
 // ─────────────────────────────────────────────────────────
 //  CONFIG
 // ─────────────────────────────────────────────────────────
-const API_BASE    = "http://localhost:5000/api";
-const SERVER_BASE = "http://localhost:5000"; // for building image URLs
+const API_BASE    = window.APP_CONFIG.API_BASE;
+const SERVER_BASE = window.APP_CONFIG.SERVER_BASE; // for building image URLs
 
 
 // ─────────────────────────────────────────────────────────
