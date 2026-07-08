@@ -31,7 +31,7 @@ import { auth, provider, signInWithPopup }
 // Only change things here — nowhere else needs updating.
 // ─────────────────────────────────────────────────────────────
 
-const API_LOGIN_URL = window.APP_CONFIG.API_BASE + "/auth/login";;
+const API_BASE = window.APP_CONFIG.API_BASE + "/auth/login";
 const DASHBOARD_PATH = './home.html';
 
 // These keys must match what register.js and home.html use
@@ -247,7 +247,7 @@ loginForm.addEventListener('submit', async function (event) {
   const password = passwordInput.value;
 
   try {
-    const response = await fetch(API_LOGIN_URL, {
+    const response = await fetch(API_BASE, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ email, password }),
@@ -404,7 +404,7 @@ if (googleBtn) {
 // Falls back silently to "—" if the server is unreachable.
 // ─────────────────────────────────────────────────────────────
 
-const API_STATS_URL = window.APP_CONFIG.API_BASE + '/api/stats';
+const API_BASE = window.APP_CONFIG.API_BASE + '/api/stats';
 
 /** Format a raw number into a compact display string.
  *  e.g. 12345 → "12K+"   5 → "5"   0 → "0" */
@@ -421,7 +421,7 @@ async function loadLiveStats() {
   if (!elListings || !elMatches || !elCities) return; // brand panel not present (mobile)
 
   try {
-    const res  = await fetch(API_STATS_URL, { signal: AbortSignal.timeout(5000) });
+    const res  = await fetch(API_BASE, { signal: AbortSignal.timeout(5000) });
     const json = await res.json();
 
     if (json.success && json.data) {
