@@ -31,7 +31,7 @@ import { auth, provider, signInWithPopup }
 // Only change things here — nowhere else needs updating.
 // ─────────────────────────────────────────────────────────────
 
-const API_LOGIN_URL  = 'http://localhost:5000/api/auth/login';
+const API_LOGIN_URL = window.APP_CONFIG.API_BASE + "/auth/login";;
 const DASHBOARD_PATH = './home.html';
 
 // These keys must match what register.js and home.html use
@@ -332,7 +332,7 @@ if (googleBtn) {
       // ── Exchange Firebase identity for a real FindMate JWT ─
       //   POST /api/auth/google  → returns { success, token, data: { user } }
       //   This gives us a real JWT so all existing auth guards work.
-      const apiResponse = await fetch('http://localhost:5000/api/auth/google', {
+      const apiResponse = await fetch(window.APP_CONFIG.API_BASE + "/auth/google", {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ name, email, profileImage }),
@@ -404,7 +404,7 @@ if (googleBtn) {
 // Falls back silently to "—" if the server is unreachable.
 // ─────────────────────────────────────────────────────────────
 
-const API_STATS_URL = 'http://localhost:5000/api/stats';
+const API_STATS_URL = window.APP_CONFIG.API_BASE + '/api/stats';
 
 /** Format a raw number into a compact display string.
  *  e.g. 12345 → "12K+"   5 → "5"   0 → "0" */
