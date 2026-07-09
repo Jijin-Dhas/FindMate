@@ -404,7 +404,7 @@ if (googleBtn) {
 // Falls back silently to "—" if the server is unreachable.
 // ─────────────────────────────────────────────────────────────
 
-const API_BASE = window.APP_CONFIG.API_BASE + '/stats';
+const STATS_API_BASE = window.APP_CONFIG.API_BASE + '/stats';
 
 /** Format a raw number into a compact display string.
  *  e.g. 12345 → "12K+"   5 → "5"   0 → "0" */
@@ -421,7 +421,7 @@ async function loadLiveStats() {
   if (!elListings || !elMatches || !elCities) return; // brand panel not present (mobile)
 
   try {
-    const res  = await fetch(API_BASE, { signal: AbortSignal.timeout(5000) });
+    const res  = await fetch(STATS_API_BASE, { signal: AbortSignal.timeout(5000) });
     const json = await res.json();
 
     if (json.success && json.data) {

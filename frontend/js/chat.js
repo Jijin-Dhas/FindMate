@@ -20,7 +20,7 @@
 // ─────────────────────────────────────────────────────────
 //  CONFIG
 // ─────────────────────────────────────────────────────────
-const API_BASE    = window.APP_CONFIG.API_BASE + "/api";
+const API_BASE    = window.APP_CONFIG.API_BASE;
 const SOCKET_URL  = window.APP_CONFIG.SOCKET_URL; // Socket.IO server URL
 
 
@@ -102,7 +102,7 @@ window.logout = function () {
 //  WHAT IS io()?\n//  ─────────────────────────────────────────────────────────
 //  io() creates a WebSocket connection from the browser to our
 //  server. It's provided by the Socket.IO client library
-//  (loaded from <script src="http://localhost:5000/socket.io/socket.io.js">)
+//  (loaded via the Socket.IO CDN script tag in chat.html)
 //
 //  The { auth: { token } } sends our JWT so the server can
 //  authenticate us before processing any chat events.

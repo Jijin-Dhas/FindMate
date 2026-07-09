@@ -240,10 +240,12 @@
     Socket.IO Client Library
     ─────────────────────────────────────────
     This script gives us the `io()` function in the browser.
-    It connects to our Socket.IO server at localhost:5000.
-    We load it from the server itself — Socket.IO auto-serves it.
+    Loaded from the Socket.IO CDN so it works identically on
+    localhost and on Render (the actual connection target is
+    set at runtime via config.js / SOCKET_URL in chat.js).
   -->
-  <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="./js/config.js"></script>
   <script src="./js/navbar.js"></script>
   <!-- Report & Safety System (v7.0) -->
   <script src="./js/report.js"></script>
