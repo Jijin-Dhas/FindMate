@@ -538,7 +538,7 @@ async function registerUser(userData) {
 // brand panel stat numbers. Mirrors the same logic in login.js.
 // ─────────────────────────────────────────────────────────────
 
-const API_STATS_URL = `${API_BASE}/stats`;
+const API_STATS_URL =window.APP_CONFIG.API_BASE + "/stats";;
 
 function formatStat(n) {
   if (n >= 1000) return Math.floor(n / 1000) + "K+";
