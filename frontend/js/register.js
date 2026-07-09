@@ -18,7 +18,7 @@
 // ─────────────────────────────────────────────────────────────
 
 // The backend API base URL — change this if your server runs elsewhere
-const API_BASE = window.APP_CONFIG.API_BASE + "/api/auth/register";
+const API_BASE = window.APP_CONFIG.API_BASE + "/auth/register";
 
 
 // ─────────────────────────────────────────────────────────────
@@ -462,7 +462,7 @@ async function registerUser(userData) {
 
   try {
     // ── Make the API request ──────────────────────────────
-    const response = await fetch(API_BASE_URL, {
+    const response = await fetch(API_BASE, {
       method: "POST",                         // HTTP method
 
       headers: {
@@ -538,7 +538,7 @@ async function registerUser(userData) {
 // brand panel stat numbers. Mirrors the same logic in login.js.
 // ─────────────────────────────────────────────────────────────
 
-const API_STATS_URL = "http://localhost:5000/api/stats";
+const API_STATS_URL = `${API_BASE}/stats`;
 
 function formatStat(n) {
   if (n >= 1000) return Math.floor(n / 1000) + "K+";

@@ -404,7 +404,7 @@ if (googleBtn) {
 // Falls back silently to "—" if the server is unreachable.
 // ─────────────────────────────────────────────────────────────
 
-const API_BASE = window.APP_CONFIG.API_BASE + '/api/stats';
+const API_BASE = window.APP_CONFIG.API_BASE + '/stats';
 
 /** Format a raw number into a compact display string.
  *  e.g. 12345 → "12K+"   5 → "5"   0 → "0" */
